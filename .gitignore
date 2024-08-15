@@ -2,3 +2,5 @@
 *.s
 *.o
 *.exe
+
+/.vscode
