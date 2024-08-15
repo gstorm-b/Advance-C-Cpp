@@ -1,9 +1,11 @@
+/* Viết function handle case cho nhiều loại cảm biến khác nhau */
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <assert.h>
 
 typedef enum {
-    TEMPERATURE_SENSOR,
+    TEMPERATURE_SENSOR = 0,
     DISTANCE_SENSOR,
     COLOR_SENSOR,
     MAGNETIC_ENCODER_SENSOR
@@ -46,7 +48,7 @@ void handleSensorMagEncoder(va_list *args) {
     printf("------ Encoder angle\n");
     printf("Direction: %s\n", (direction == ENC_POSISTIVE) ? "Positive" : "Negative");
     printf("Magnetic position: %d.\n", angle);
-    printf("Absolute angle: %.3f.\n", absolute_angle);
+    printf("Absolute angle: %.3f.\n\n", absolute_angle);
 }
 
 void handleSensor(SensorType type, ...) {
@@ -68,6 +70,8 @@ void handleSensor(SensorType type, ...) {
 }
 
 int main() {
+
+    // handleSensor(6, 0);
 
     handleSensor(TEMPERATURE_SENSOR, 12.5, 15.999);
     handleSensor(DISTANCE_SENSOR, 180.9);
