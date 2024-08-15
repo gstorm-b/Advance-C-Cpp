@@ -60,3 +60,34 @@ char char_##name;
 ```
 
 # Bài 2: STDARG - ASSERT
+## STDARG
+**STDARG là thư viện chuẩn của C hỗ trợ tạo function với số lượng tham số và kiểu dữ liệu không xác định trước.**
+
+Các Macro được định nghĩa trong thư viện:
+- va_list: là kiểu dự liệu sử dụng cho 3 macro còn lại (Cấp phát một vùng nhớ để sử dụng cho va_start và va_arg).
+- va_start: khởi tạo điểm bắt đầu của list tham số. Điểm bắt đầu là label phía sau label được khởi tạo. Gọi trước va_start trước khi gọi va_arg.
+- va_arg: trả về giá trị của label hiện tại trong list tham số. Ở lần gọi kế tiếp thì giá trị nhận được là của tham số tiếp theo phía sau nó.
+- va_end: giải phóng vùng nhớ đã tạo ra từ va_list. Cần gọi khi không còn sử dụng va_list đó nữa.
+## ASSERT
+ 
+**ASSERT là thư viên chuẩn của C hỗ trợ báo lỗi chương trình.**
+
+**Macro assert(_Expression) có tham số truyền vào là điều kiện báo lỗi và chuỗi kí tự thông báo khi có lỗi xảy ra.**
+* Nếu điều kiện đúng chương trình sẽ chạy tiếp mà không báo lỗi.
+* Nếu điều kiện sai chương trình sẽ báo lỗi với chuỗi kí tự đã định nghĩa trước và dừng chương trình ngay lập tức.
+
+Ví dụ dùng assert để kiểm tra điều kiện:
+```
+#define MAX_RANGE       20
+#define MIN_RANGE       0
+#define ASSERT_RANGE(val, msg)      \
+assert(((val >= MIN_RANGE) && (val <= MAX_RANGE)) && #msg)
+```
+Ngoài ra cũng có thể định nghĩa một macro tiện cho tiên debug:
+```
+#define LOG(condition, msg)         \
+assert(condition && #msg)
+```
+
+
+
