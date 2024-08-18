@@ -91,27 +91,34 @@ Ngoài ra cũng có thể định nghĩa một macro tiện cho tiên debug:
 assert(condition && #msg)
 ```
 
-# Bài 3: POINTER
-### Pointer
+# Bài 3: Pointer
+<details>
+<summary>nội dung</summary>
 
-**Mọi biến đều được lưu trên RAM trong quá trình thực thi chương trình và có địa chỉ riêng.**
+<h2>Pointer</h2>
 
 **Pointer là biến có giá trị là địa chỉ của một biến khác. Thông qua con trỏ có thể truy cập đến để đọc hoặc thay đổi giá trị tại địa chỉ đó.**
 
-Cú pháp khai báo con trỏ:
-* Dùng toán tử * để khai báo con trỏ.
-* Toán tử & đứng trước tên biến để lấy địa chỉ của biến đó.
-```
-int number = 10;
-int *ptr = &number;
-*ptr = 100; // Number = 100
-```
-**Con trỏ NULL: là con trỏ có giá trị là 0 (Trỏ đến địa chỉ 0).**
-* Khi khai báo một biến mới chương trình sẽ lấy một vùng nhớ chưa được sử dụng trên RAM để lưu biến. Nếu không gán giá trị khi khai báo thì giá trị của biến sẽ là một giá trị ngẫu nhiên đã được lưu tại địa chỉ này trước đó. Do đó khi khai báo con trỏ mà chưa gán địa chỉ cho nó thì gán NULL để tránh truy cập đến một ô nhớ khác làm ảnh hưởng chương trình.
+* Mọi biến đều được lưu trên RAM trong quá trình thực thi chương trình và có địa chỉ riêng.
+
+* Có thể dùng pointer để truy cập nhiều biến khác nhau giúp quá trình xử lí chương trình linh hoạt hơn.
 
 **Kích thước của con trỏ phụ thuộc vào kiến trúc của vi xử lí.**
 
-**Con trỏ VOID: là con trỏ có thể trỏ tới một địa chỉ bất kì mà không cần biết trước kiểu dữ liệu của biến được trỏ tới. Tuy nhiên khi đọc hoặc thay đổi giá trị của biến đó phải ép kiểu con trỏ đúng với kiểu dữ liệu của biến.**
+Ví dụ khai báo và sử dụng con trỏ:
+```
+int number = 10;
+int *ptr = &number;   // lấy địa chỉ của biến number gán cho con trỏ
+*ptr = 100;           // thay đổi giá trị tại biến number = 100
+```
+
+<h2>Void Pointer</h2>
+
+**Void Pointer là con trỏ có thể trỏ đến bất kì biến nào mà không cần biết trước kiểu dữ liệu của nó.**
+
+* Tuy nhiên trước khi đọc hoặc thay đổi giá trị của biến được trỏ tới thì cần ép kiểu cho đúng với kiểu dữ liệu của biến đó.
+
+Ví dụ khai báo Void pointer:
 ```
 int a = 100;
 void *ptr = &a;
@@ -119,35 +126,126 @@ printf("%d\n", *(int *)a);
 *(int *)ptr = 10;
 ```
 
-### POINTER TO CONSTANT
+<h2>NULL Pointer</h2>
 
-**Pointer to constant là con trỏ chỉ cho phép đọc giá trị tại tại địa chỉ được trỏ đến mà không được phép thay đổi giá trị tại địa chỉ đó. Tuy nhiên có thể gán lại giá trị(địa chỉ trỏ đến) cho con trỏ.**
+**NULL Pointer là con trỏ có giá trị (địa chỉ trỏ tới) là 0x00.**
+
+Khi khai báo một biến mới chương trình sẽ lấy một vùng nhớ chưa được sử dụng trên RAM để lưu biến. Nếu không gán giá trị khi khai báo thì giá trị của biến sẽ là một giá trị ngẫu nhiên đã được lưu tại địa chỉ này trước đó. 
+
+⇒ Do đó khi khai báo con trỏ mà chưa gán địa chỉ cho nó thì gán NULL để tránh lỗi chương trình khi trỏ nhầm địa chỉ. (Khi không dùng nữa cũng gán NULL)
+
+* Dùng con trỏ NULL có thể kiểm tra được con trỏ đã được khai báo địa chỉ hợp lệ hay chưa.
+
 ```
-int const *ptr_const;
-const int *ptr_const;
+void *ptr = NULL;
 ```
 
-### CONSTANT POINTER:
-**Constant pointer là con trỏ được khởi tạo với giá trị(địa chỉ trỏ đến) không được phép thay đổi. Chỉ có thể đọc và thay đổi giá trị tại địa chỉ được trỏ đến.**
+<h2>Pointer to Constant</h2>
+
+**Pointer to constant là con trỏ chỉ cho phép đọc giá trị tại tại địa chỉ được trỏ đến mà không được phép thay đổi giá trị tại địa chỉ đó. Tuy nhiên có thể gán lại giá trị (địa chỉ trỏ đến) cho con trỏ.**
+
+Ví dụ sử dụng pointer to constant:
 ```
-int *const const_ptr = &a;
+int number_a = 10;
+int number_b = 5;
+// có thể khai báo con trỏ theo một trong hai cách sau.
+int const *ptr_const = &number_a;
+// const int *ptr_const = &number_a;
+
+// không thể thay đổi giá trị của biến được trỏ đến.
+// *ptr_const = 5; => Lỗi
+// tuy nhiên có thể thay đổi giá trị của con trỏ.
+ptr_const = &number_b;
 ```
 
-### FUNCTION POINTER
+<h2>Constant Pointer</h2>
+
+**Constant pointer là con trỏ được khởi tạo với giá trị (địa chỉ trỏ đến) không được phép thay đổi. Chỉ có thể đọc và thay đổi giá trị tại địa chỉ được trỏ đến.**
+
+Ví dụ sử dụng constant pointer:
+```
+int number_a = 10;
+int number_b = 5;
+int *const ptr_const = &number_a;
+
+// có thể thay đổi giá trị tại number_a
+*const_ptr = 7;
+
+// tuy nhiên đã khởi tạo con trỏ trỏ đến địa chỉ của number_a thì không thể trỏ đến một biến khác nữa.
+// ptr_const = &number_b; => chương trình báo lỗi
+```
+
+<h2>Pointer to Function</h2>
+
 **Function pointer là con trỏ có giá trị là địa chỉ của một function.**
 
-Ví dụ khai báo function pointer:
+    ⇒ Trỏ đến vùng nhớ chứa function.
+
+Ví dụ sử dụng pointer to function:
+
 ```
+/*
+	khai báo ptr là con trỏ hàm có tham số truyền vào là (int, int)
+và kiểu trả về là int.
+	sử dụng con trỏ hàm để gọi hàm phù hợp theo điều kiện
+*/
+
+#define OPERATOR    SUM
+// #define OPERATOR    MULTIPLE
+
 int multiple(int number_a, int number_b) {
     return number_a * number_b;
 }
-...
-int (*ptr)(int, int);
-ptr = &multiple;
-int result = ptr(5, 3);
-printf("%d\n", ptr(5, 3));
+
+int sum(int number_a, int number_b) {
+    return number_a + number_b;
+}
+
+int main() {
+    int (*ptr)(int, int) = NULL;
+
+    #if OPERATOR == SUM
+        ptr = &sum;
+    #elif OPERATOR == MULTIPLE
+        ptr = &multiple;
+    #endif
+    
+    printf("%d\n", ptr(5, 10));
+}
 ```
-Ép kiểu cho con trỏ:
+* Function pointer còn có thể dùng làm tham số truyền vào cho một function khác. 
+
+    Ví dụ:
+    ```
+    /*
+        Tạo một function có tham số truyền vào là một con trỏ hàm và các tham số phụ.
+        Sử dụng con trỏ để gọi hàm tính toán.
+    */
+
+
+    int multiple(int number_a, int number_b) {
+        return number_a * number_b;
+    }
+
+    int sum(int number_a, int number_b) {
+        return number_a + number_b;
+    }
+
+    int CalcAndShow(int (*ptr)(int, int), int number_a, int number_b) {
+        int result = ptr(number_a, number_b);
+        printf("%d\n", result);
+        return result;
+    }
+
+    int main() {
+        int a = 10, b = 4;
+        int (*ptr)(int, int) = NULL;
+        CalcAndShow(&multiple, a, b);
+        CalcAndShow(&sum, a, b);
+    }
+    ```
+
+Ép kiểu một con trỏ hàm:
 ```
 int sum(int number_a, int number_b) {
     return number_a + number_b;
@@ -156,3 +254,35 @@ int sum(int number_a, int number_b) {
 void *ptr = &sum;
 int result = ((int (*)(int, int))ptr)(5, 3);
 ```
+
+<h2>Pointer to Pointer</h2>
+
+**Pointer to Pointer là con trỏ có giá trị là địa chỉ của con trỏ khác (trỏ đến con trỏ khác).**
+
+```
+/*
+	Khai báo con trỏ ptr_1 trỏ tới biến point.
+	Khai báo con trỏ ptr_2 trỏ tới ptr_1.
+	In ra giá trị và địa chỉ của ptr_1 và ptr_2.
+*/
+
+double point = 9.2;
+double *ptr_1 = &point;
+double **ptr_2 = &ptr_1;
+
+printf("&point : %lu\t- point = %.3f\n", &point, point);
+printf("&ptr_1 : %lu\t- *ptr_1 = %.3f\n", &ptr_1, *ptr_1);
+
+// con trỏ ptr_2 có giá trị là địa chỉ của ptr_1.
+// ta cũng có thể trỏ với point qua ptr_2
+printf("ptr_2 : %lu\t- *ptr_2 : %lu\t- **ptr_2 = %.3f\n", ptr_2, *ptr_2, **ptr_2);
+
+/*
+	Kết quả in ra
+&point : 144701488      - point = 9.200
+&ptr_1 : 144701480      - *ptr_1 = 9.200
+ptr_2 : 144701480       - *ptr_2 : 144701488    - **ptr_2 = 9.200
+*/
+```
+
+</details>
