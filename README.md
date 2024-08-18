@@ -1,3 +1,5 @@
+**[Trình bày bài học trên Notion](https://ritzy-tray-c64.notion.site/Advance-C-CPP-1340b8981c614ba29eb68631e6479064)**
+
 # Bài 1: Compiler - Macro
 ## Compiler
 **Compiler là trình biên dịch chuyển từ source code sang mã máy.**
@@ -89,5 +91,68 @@ Ngoài ra cũng có thể định nghĩa một macro tiện cho tiên debug:
 assert(condition && #msg)
 ```
 
+# Bài 3: POINTER
+### Pointer
 
+**Mọi biến đều được lưu trên RAM trong quá trình thực thi chương trình và có địa chỉ riêng.**
 
+**Pointer là biến có giá trị là địa chỉ của một biến khác. Thông qua con trỏ có thể truy cập đến để đọc hoặc thay đổi giá trị tại địa chỉ đó.**
+
+Cú pháp khai báo con trỏ:
+* Dùng toán tử * để khai báo con trỏ.
+* Toán tử & đứng trước tên biến để lấy địa chỉ của biến đó.
+```
+int number = 10;
+int *ptr = &number;
+*ptr = 100; // Number = 100
+```
+**Con trỏ NULL: là con trỏ có giá trị là 0 (Trỏ đến địa chỉ 0).**
+* Khi khai báo một biến mới chương trình sẽ lấy một vùng nhớ chưa được sử dụng trên RAM để lưu biến. Nếu không gán giá trị khi khai báo thì giá trị của biến sẽ là một giá trị ngẫu nhiên đã được lưu tại địa chỉ này trước đó. Do đó khi khai báo con trỏ mà chưa gán địa chỉ cho nó thì gán NULL để tránh truy cập đến một ô nhớ khác làm ảnh hưởng chương trình.
+
+**Kích thước của con trỏ phụ thuộc vào kiến trúc của vi xử lí.**
+
+**Con trỏ VOID: là con trỏ có thể trỏ tới một địa chỉ bất kì mà không cần biết trước kiểu dữ liệu của biến được trỏ tới. Tuy nhiên khi đọc hoặc thay đổi giá trị của biến đó phải ép kiểu con trỏ đúng với kiểu dữ liệu của biến.**
+```
+int a = 100;
+void *ptr = &a;
+printf("%d\n", *(int *)a);
+*(int *)ptr = 10;
+```
+
+### POINTER TO CONSTANT
+
+**Pointer to constant là con trỏ chỉ cho phép đọc giá trị tại tại địa chỉ được trỏ đến mà không được phép thay đổi giá trị tại địa chỉ đó. Tuy nhiên có thể gán lại giá trị(địa chỉ trỏ đến) cho con trỏ.**
+```
+int const *ptr_const;
+const int *ptr_const;
+```
+
+### CONSTANT POINTER:
+**Constant pointer là con trỏ được khởi tạo với giá trị(địa chỉ trỏ đến) không được phép thay đổi. Chỉ có thể đọc và thay đổi giá trị tại địa chỉ được trỏ đến.**
+```
+int *const const_ptr = &a;
+```
+
+### FUNCTION POINTER
+**Function pointer là con trỏ có giá trị là địa chỉ của một function.**
+
+Ví dụ khai báo function pointer:
+```
+int multiple(int number_a, int number_b) {
+    return number_a * number_b;
+}
+...
+int (*ptr)(int, int);
+ptr = &multiple;
+int result = ptr(5, 3);
+printf("%d\n", ptr(5, 3));
+```
+Ép kiểu cho con trỏ:
+```
+int sum(int number_a, int number_b) {
+    return number_a + number_b;
+}
+...
+void *ptr = &sum;
+int result = ((int (*)(int, int))ptr)(5, 3);
+```
