@@ -139,13 +139,85 @@ Ví dụ #ifdef và #ifndef:
     #endif
     ```
 
+**Macro và function khác nhau như thế nào mặc dù có thể cho ra kết quả như nhau.**
 
+* Function chiếm một vùng nhớ cố định trong main memory. Vì function chỉ được định nghĩa một lần. Mỗi khi gọi function thì program counter sẽ nhảy tới vùng nhớ lưu function đó để thực thi.
+* Còn khi định nghĩa macro thì khi biên dịch compiler sẽ thay thế đoạn macro được định nghĩa tại vị trí gọi macro đó. Khi gọi nhiều lần sẽ có nhiều đoạn giống nhau trong main memory.
+    
+⇒ Dùng function sẽ tối ưu hơn về mặt bộ nhớ nhưng sẽ không tối ưu về mặt tốc độ khi so với macro.
 
 </details>
 
 # Bài 2: STDARG - ASSERT
 <details>
 <summary>nội dung</summary>
+
+<h2>STDARG</h2>
+
+**Stdarg là thư viện chuẩn của C, hỗ trợ viết function với số lượng tham số và kiểu dữ liệu không xác định trước.**
+
+Kiểu dữ liệu và macro của thư viện stdarg:
+
+* va_list: là kiểu dự liệu để chứa các tham số truyền vào.
+
+* void va_start(va_list *ap*, *argN*): xác định địa chỉ bắt đầu trong danh sách tham số truyền vào. Địa chỉ bắt đầu là địa chỉ của tham số tiếp theo phía sau  label argN. Cần gọi trước va_start trước khi gọi va_arg.
+
+* type va_arg(va_list *ap*, *type*): trả về giá trị của địa chỉ hiện tại đang trỏ tới trong danh sách tham số với kiểu dữ liệu xác định tại type. Và chuyển con trỏ đến vị trí tiếp theo trong danh sách tham số.
+
+* void va_end(): giải phóng vùng nhớ đã tạo ra của biến va_list. Cần gọi khi không còn sử dụng va_list đó nữa.
+
+Ví dụ viết một function tính tổng các số truyền vào kiểu int có số lượng tham số có thể thay đổi:
+
+```c
+int sum(int count, ...){
+    va_list num_list;
+    // khởi tạo va_list để lưu địa chỉ các tham số truyền vào
+    va_start(num_list, count);
+    // lấy ra giá trị của tham số hiện tại đang trỏ đến (địa chỉ đầu tiên là địa chỉ của tham số phía sau count)
+    int result = va_arg(num_list, int);
+    for(int index=1;index<count;index++) {
+            // cộng dồn lần lượt các giá trị còn lại trong danh sách tham số
+        result += va_arg(num_list, int);
+    }
+    // giải phóng vùng nhớ đã khởi tạo num_list
+    va_end(num_list);
+    return result;
+}
+
+int main(void) {
+    printf("%d\n", sum(5, 1, 3, 5, 6, 7));
+    return 0;
+}
+```
+
+⇒ Ứng dụng để viết những function xử lí những trường hợp tham số truyền vào có thể thay đổi được.
+
+<h2>ASSERT</h2>
+
+**Assert là thư viện chuẩn của C, hỗ trợ debug và báo lỗi cho chương trình.**
+
+**void assert(_Expression):** có tham số truyền vào là điều kiện báo lỗi và chuỗi kí tự thông báo khi có lỗi xảy ra.
+
+* Nếu điều kiện đúng chương trình sẽ chạy tiếp mà không báo lỗi.
+* Nếu điều kiện sai chương trình sẽ báo lỗi với chuỗi kí tự đã định nghĩa trước và dừng chương trình ngay lập tức.
+
+⇒ Quan trọng trong quá trình debug và xử lí lỗi và assert sẽ báo chính xác vị trí lỗi trong source code là line nào.
+
+Ví dụ sử dụng assert để báo lỗi:
+```c
+#define LOG(condition, cmd)     assert((condition) && #cmd)
+
+double divide(double number_a, double number_b) {
+    // assert( (number_b!=0) && "Divide for zero");
+    LOG(number_b!=0, "Divide for zero");
+    return number_a / number_b;
+}
+
+int main() {
+	printf("%f\n", divide(4.0, 1.0));
+	printf("%f\n", divide(4.0, 0.0));
+}
+```
 
 </details>
 
