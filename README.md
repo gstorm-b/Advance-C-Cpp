@@ -184,7 +184,7 @@ Ví dụ #ifdef và #ifndef:
 **Kích thước của con trỏ phụ thuộc vào kiến trúc của vi xử lí.**
 
 Ví dụ khai báo và sử dụng con trỏ:
-```
+```c
 int number = 10;
 int *ptr = &number;   // lấy địa chỉ của biến number gán cho con trỏ
 *ptr = 100;           // thay đổi giá trị tại biến number = 100
@@ -197,7 +197,7 @@ int *ptr = &number;   // lấy địa chỉ của biến number gán cho con tr�
 * Tuy nhiên trước khi đọc hoặc thay đổi giá trị của biến được trỏ tới thì cần ép kiểu cho đúng với kiểu dữ liệu của biến đó.
 
 Ví dụ khai báo Void pointer:
-```
+```c
 int a = 100;
 void *ptr = &a;
 printf("%d\n", *(int *)a);
@@ -214,7 +214,7 @@ Khi khai báo một biến mới chương trình sẽ lấy một vùng nhớ ch
 
 * Dùng con trỏ NULL có thể kiểm tra được con trỏ đã được khai báo địa chỉ hợp lệ hay chưa.
 
-```
+```c
 void *ptr = NULL;
 ```
 
@@ -223,7 +223,7 @@ void *ptr = NULL;
 **Pointer to constant là con trỏ chỉ cho phép đọc giá trị tại tại địa chỉ được trỏ đến mà không được phép thay đổi giá trị tại địa chỉ đó. Tuy nhiên có thể gán lại giá trị (địa chỉ trỏ đến) cho con trỏ.**
 
 Ví dụ sử dụng pointer to constant:
-```
+```c
 int number_a = 10;
 int number_b = 5;
 // có thể khai báo con trỏ theo một trong hai cách sau.
@@ -241,7 +241,7 @@ ptr_const = &number_b;
 **Constant pointer là con trỏ được khởi tạo với giá trị (địa chỉ trỏ đến) không được phép thay đổi. Chỉ có thể đọc và thay đổi giá trị tại địa chỉ được trỏ đến.**
 
 Ví dụ sử dụng constant pointer:
-```
+```c
 int number_a = 10;
 int number_b = 5;
 int *const ptr_const = &number_a;
@@ -261,7 +261,7 @@ int *const ptr_const = &number_a;
 
 Ví dụ sử dụng pointer to function:
 
-```
+```c
 /*
 	khai báo ptr là con trỏ hàm có tham số truyền vào là (int, int)
 và kiểu trả về là int.
@@ -294,7 +294,7 @@ int main() {
 * Function pointer còn có thể dùng làm tham số truyền vào cho một function khác. 
 
     Ví dụ:
-    ```
+    ```c
     /*
         Tạo một function có tham số truyền vào là một con trỏ hàm và các tham số phụ.
         Sử dụng con trỏ để gọi hàm tính toán.
@@ -324,7 +324,7 @@ int main() {
     ```
 
 Ép kiểu một con trỏ hàm:
-```
+```c
 int sum(int number_a, int number_b) {
     return number_a + number_b;
 }
@@ -337,7 +337,7 @@ int result = ((int (*)(int, int))ptr)(5, 3);
 
 **Pointer to Pointer là con trỏ có giá trị là địa chỉ của con trỏ khác (trỏ đến con trỏ khác).**
 
-```
+```c
 /*
 	Khai báo con trỏ ptr_1 trỏ tới biến point.
 	Khai báo con trỏ ptr_2 trỏ tới ptr_1.
