@@ -16,7 +16,7 @@
 
     * Preprocessor sẽ copy nội dung của file được include vào file tiền xử lí.
     * Xóa bỏ các comment trong source file.
-    * Chèn nội dung được định nghĩa cua macro tại vị trí gọi macro đó.
+    * Chèn nội dung được định nghĩa của macro tại vị trí gọi macro đó.
 
 * Compilation: từ preprocessed source compiler sẽ biên dịch sang assembly code.
 
@@ -142,7 +142,7 @@ Ví dụ #ifdef và #ifndef:
 **Macro và function khác nhau như thế nào mặc dù có thể cho ra kết quả như nhau.**
 
 * Function chiếm một vùng nhớ cố định trong main memory. Vì function chỉ được định nghĩa một lần. Mỗi khi gọi function thì program counter sẽ nhảy tới vùng nhớ lưu function đó để thực thi.
-* Còn khi định nghĩa macro thì khi biên dịch compiler sẽ thay thế đoạn macro được định nghĩa tại vị trí gọi macro đó. Khi gọi nhiều lần sẽ có nhiều đoạn giống nhau trong main memory.
+* Còn khi định nghĩa macro thì khi biên dịch preprocessor sẽ thay thế đoạn macro được định nghĩa tại vị trí gọi macro đó. Khi gọi nhiều lần sẽ có nhiều đoạn giống nhau trong main memory.
     
 ⇒ Dùng function sẽ tối ưu hơn về mặt bộ nhớ nhưng sẽ không tối ưu về mặt tốc độ khi so với macro.
 
