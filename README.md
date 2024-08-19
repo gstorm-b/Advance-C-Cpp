@@ -38,6 +38,8 @@ assert(condition && #msg)
 
 **Compiler là trình biên dịch, có nhiệm vụ biên dịch source code sang ngôn ngữ máy để vi xử lí có thể thực thi được chương trình đó.**
 
+![image](https://github.com/user-attachments/assets/418ae9af-78e6-4ba5-a352-9193f6056b5c)
+
 * Preprocessing: là quá trình tiền xử lí, tạo ra file preprocessed. Trong qua trình này:
 
     * Preprocessor sẽ copy nội dung của file được include vào file tiền xử lí.
