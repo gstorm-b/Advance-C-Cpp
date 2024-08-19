@@ -1,66 +1,5 @@
 **[Trình bày bài học trên Notion](https://ritzy-tray-c64.notion.site/Advance-C-CPP-1340b8981c614ba29eb68631e6479064)**
 
-# Bài 1: Compiler - Macro
-## Compiler
-**Compiler là trình biên dịch chuyển từ source code sang mã máy.**
-
-Các bước trong quá trình biên dịch:
-1. Preprocessing: quá trình tiền xử lí tạo ra file source có định dạng ‘*.i”. Nếu có include thì copy nội dung từ file được include sang. Xóa bỏ comment nếu có. Copy nội dung của macro được định nghĩa vào chỗ gọi.
-2. Compilation: từ file được tạo ra sau tiền xử lí Compiler sẽ chuyển tất cả nội dung đó sang code assembly. (định dạng “*.s”)
-3. Assemble: tạo ra object file  (định dạng *.o). File object chứa địa chỉ và giá trị tại địa chỉ đó.
-4. Linking: Link các file object lại với nhau và tạo ra file mã máy. Nếu include header thì trong quá tiền xử lí chỉ có các tên hàm trong source do đó cần link các file object chứa nội dung của các header đó.
-## Macro
-**Macro là một đoạn code để chỉ thị compiler thay thế nội dung được định nghĩa trước tại vị trí gọi macro đó trong quá trình tiền xử lí (preprocessing).**
-
-Các chỉ thị tiền xử lí:
-* #include: toàn bộ nội dung của file được include sẽ được copy vào file tiền xử lí (định dạng *.i).
-    
-* #define: dùng để định nghĩa một macro. Có thể định nghĩa một hằng số, một function, hoặc biến.
-    
-* #undef: dùng để hủy label đã được định nghĩa là macro trước đó. Sau đó có thể định nghĩa lại để sử dụng cho mục đích khác nếu cần.
-    
-* #if, #elif, #else: là những chỉ thị điều kiện để quyết định xem có thêm những nội dung bên trong điều kiện vào file tiền xử lí hay không. Kết thúc chỉ thị điều kiện này là #endif.
-    
-* #ifdef và ifndef: là chỉ thị điều kiện đã định nghĩa label đó hay chưa. Nếu điều kiện đúng thì nội dung bên trong điều kiện được thêm vào file tiền xử lí. Kết thúc chỉ thị điều kiện là #endif.
-
-Một số toán tử của Macro:
-* #: để định nghĩa đó là một chuỗi (stringize).
-```
-#define MSG(msg)            #msg
-...
-printf("%s", MSG(Hello world));
-```
-* ##: để định nghĩa tên biến.
-```
-#define DEC_VAR(number)     int var_##number
-DEC_VAR(2);
-```
-* Variadic macro: tạo ra Macro có thể nhận số lượng tham số truyền vào và kiểu dữ liệu không xác định.
-```
-#define NUM_LIST(...)                       \
-int sum_list[] = {__VA_ARGS__}
-// khai báo trong file main.c
-NUM_LIST(1, 4, 5, 6);
-// kết quả sau tiền xử lí
-int sum_list[] = {1, 4, 5, 6};
-```
-
-Ví dụ tạo Macro định nghĩa một function.
-```
-#define CREATE_FUNC(func, cmd)              \
-void func() {                               \
-    printf(#cmd);                           \
-    printf("\n");                           \
-}
-```
-Ví dụ tạo Macro định nghĩa nhiều biến.
-```
-#define CREATE_VAR(name)                    \
-int int_##name;                             \
-double double_##name;                       \
-char char_##name;                           
-```
-
 # Bài 2: STDARG - ASSERT
 ## STDARG
 **STDARG là thư viện chuẩn của C hỗ trợ tạo function với số lượng tham số và kiểu dữ liệu không xác định trước.**
@@ -90,6 +29,145 @@ Ngoài ra cũng có thể định nghĩa một macro tiện cho tiên debug:
 #define LOG(condition, msg)         \
 assert(condition && #msg)
 ```
+
+# Bài 1: Compiler - Macro
+<details>
+<summary>nội dung</summary>
+
+<h2>Compiler</h2>
+
+**Compiler là trình biên dịch, có nhiệm vụ biên dịch source code sang ngôn ngữ máy để vi xử lí có thể thực thi được chương trình đó.**
+
+* Preprocessing: là quá trình tiền xử lí, tạo ra file preprocessed. Trong qua trình này:
+
+    * Preprocessor sẽ copy nội dung của file được include vào file tiền xử lí.
+    * Xóa bỏ các comment trong source file.
+    * Chèn nội dung được định nghĩa cua macro tại vị trí gọi macro đó.
+
+* Compilation: từ preprocessed source compiler sẽ biên dịch sang assembly code.
+
+* Assemble: assembler tạo ra object file từ assembly code.
+
+* Linking: Linker sẽ gộp các file object đã tạo ra từ lại thành một excutable file.
+    * Vì khi include một header thì file header đó chỉ chứa tên của hàm không có nội dung thực thi của hàm đó. Tức là sau tiền xử lí cũng chỉ chứa tên hàm mà không có nội dung hàm trong file đó.
+    * File source của header đó cũng được biên dịch thành file object và linker sẽ gộp nội dung của hàm đó vào executable file.
+
+<h2>Macro</h2>
+
+**Macro gồm một label và nội dung là đoạn code sẽ được thay thế cho label đó trong quá trình tền xử lí (preprocessing).**
+
+**Chỉ thị tiền xử lí là chỉ thị báo cho preprocesor xử lí những nội dung có trong source code.**
+
+Các chỉ thị tiền xử lí:
+
+* #include: là chỉ thị chèn tất cả nội dung của file được include vào source file.
+    
+    ⇒ Giúp quản lí và tái sử dụng source code hiệu quả.
+    
+* #define: dùng để định nghĩa một macro.
+
+* #undef: để hủy định nghĩa một macro đã định nghĩa trước đó.
+    
+    ⇒ Sử dụng trong trường hợp cần định nghĩa lại macro.
+    
+* #if, #elif, #else: là những chỉ thị điều kiện để quyết định xem có chèn những nội dung bên trong điều kiện vào source file hay không. Kết thúc chỉ thị điều kiện này là #endif.
+    
+    ⇒ Dùng để linh hoạt khai báo macro có nội dung khác nhau phù hợp với yêu cầu và đối tượng thực thi chương trình.
+    
+- #ifdef và #ifndef: là chỉ thị kiểm tra xem đã định nghĩa macro đó hay chưa. Nếu điều kiện đúng thì nội dung bên trong điều kiện sẽ được chèn vào source file. Kết thúc chỉ thị điều kiện là #endif.
+    
+    ⇒ Để tránh chèn lặp lại những nội dung đã được định nghĩa và chèn vào trước đó.
+
+Các toán tử trong macro:
+* Stringize: định nghĩa nội dung của label phía sau # là một chuỗi trong dấu “”.
+    
+    ```c
+    #define _PRINTF(cmd) printf(#cmd)
+    ```
+    
+* Concatenation: nối nội dung của label phía sau ## vào chuỗi phía trước.
+    
+    ```c
+    #define PIN_DEF(number)    int pin_##number
+    ```
+    
+* Variadic: tạo ra macro có thể nhận số lượng tham số truyền vào không cố định và có thể thay đổi.
+
+    ```c
+    #define NUM_LIST(...)                       \
+    int sum_list[] = {__VA_ARGS__}
+
+    NUM_LIST(1, 4, 5, 6);
+
+    // kết quả sau tiền xử lí
+    int sum_list[] = {1, 4, 5, 6};
+    ```
+
+Ví dụ định nghĩa macro:
+
+* Định nghĩa macro có chứa giá trị của số pi.
+
+* Định nghĩa macro khai báo nhiều biến có cùng format tên.
+
+* Định nghĩa macro khai báo function.
+
+    ```c
+    #define PI_NUMBER               (double)3.14159
+
+    #define NEW_VAR(name)           \
+    int         int_##name;         \
+    double      double_##name;      \
+    char        char_##name;
+
+    #define     _PRINTF(func_name, cmd)         \
+    void func_name() {                          \
+        printf(#cmd);                           \
+        printf("\n");                           \
+    }
+
+    _PRINTF(print_hello, hello!);
+    _PRINTF(print_goodbye, good bye!);
+
+    int main() {
+
+        printf("%.3f\n", PI_NUMBER); 
+
+        NEW_VAR(test);
+        int_test = 5;
+        double_test = 5.0;
+        char_test = 'a';
+
+        print_hello();
+        print_goodbye();
+        return 0;
+    }
+    ```
+
+Ví dụ #ifdef và #ifndef:
+
+* Dùng #ifndef để kiểm tra xem label BOARD_H đã được địa nghĩa trước đó hay chưa. Và định nghĩa label đó nếu chưa.
+
+* Dùng điều kiện #if, #elif để định nghĩa chân Led builtin  phù hợp với board cần biên dịch.
+
+    ```c
+    #ifndef BOARD_H
+    #define BOARD_H
+
+    #define MCU     UNO
+    //#define MCU     MEGA
+
+    #if MCU == UNO
+        #define     LED_BULTIN      2
+    #elif MCU == MEGA
+        #define     LED_BULTIN      7
+    #endif
+
+    #endif
+    ```
+
+
+
+</details>
 
 # Bài 3: Pointer
 <details>
