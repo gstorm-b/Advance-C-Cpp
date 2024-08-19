@@ -1,4 +1,4 @@
-**[Trình bày bài học trên Notion](https://ritzy-tray-c64.notion.site/Advance-C-CPP-1340b8981c614ba29eb68631e6479064)**
+**[Trình bày bài học trên Notion web](https://ritzy-tray-c64.notion.site/Advance-C-CPP-1340b8981c614ba29eb68631e6479064)**
 
 # Bài 1: Compiler - Macro
 <details>
