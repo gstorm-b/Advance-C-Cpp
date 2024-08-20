@@ -31,6 +31,12 @@ int main() {
    INIT_MOTOR(motorA, 1);
    INIT_MOTOR(motorB, 2);
 
+   // PIN PIN_motorC = 3;
+   // MotorController motorC = { .start = startMotor, .stop = stopMotor, .changeSpeed = changeSpeedMotor };
+   // motorC.start(PIN_motorC);
+   // motorC.changeSpeed(PIN_motorC, 50);
+   // motorC.stop(PIN_motorC);
+
    // Sử dụng motorA
    motorA.start(PIN_motorA);
    motorA.changeSpeed(PIN_motorA, 50);

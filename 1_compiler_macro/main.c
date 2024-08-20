@@ -13,7 +13,7 @@
 
 int main() {
 
-    SUM_INT(1, 8, 10);
+    SUM_INT(1, 8, 10, 7);
 
     return 0;
 }

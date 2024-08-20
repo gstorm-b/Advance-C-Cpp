@@ -8,7 +8,7 @@ typedef enum {
     TEMPERATURE_SENSOR = 0,
     DISTANCE_SENSOR,
     COLOR_SENSOR,
-    MAGNETIC_ENCODER_SENSOR
+    MAGNETIC_ENCODER_SENSOR,
 }SensorType;
 
 typedef enum {
@@ -24,7 +24,14 @@ typedef enum {
 void handleSensorTemperature(va_list *args) {
     double target_temp = va_arg(*args, double);
     double current_temp = va_arg(*args, double);
-    printf("------ Temperature data\n");
+    int is_show = va_arg(*args, int);
+    if (is_show == 0) {
+        printf("------ Temperature data\n");
+    } else {
+        char *ptr = va_arg(*args, char*);
+        printf("------ Temperature data at %s\n", ptr);
+    }
+    
     printf("Tagert cpu temperature: %.3f.\n", target_temp);
     printf("Current cpu temperature: %.3f.\n", current_temp);
     printf("Error: %.3f.\n\n", target_temp - current_temp);
@@ -56,6 +63,7 @@ void handleSensor(SensorType type, ...) {
     va_start(args, type);
 
     switch (type) {
+
         CASE_TYPE(TEMPERATURE_SENSOR, handleSensorTemperature(&args));
         CASE_TYPE(DISTANCE_SENSOR, handleSenorDistance(&args));
         CASE_TYPE(COLOR_SENSOR, handleSenorColor(&args));
@@ -73,7 +81,8 @@ int main() {
 
     // handleSensor(6, 0);
 
-    handleSensor(TEMPERATURE_SENSOR, 12.5, 15.999);
+    handleSensor(TEMPERATURE_SENSOR, 12.5, 15.999, 0);
+    handleSensor(TEMPERATURE_SENSOR, 12.5, 15.999, 1, "Living room");
     handleSensor(DISTANCE_SENSOR, 180.9);
     handleSensor(COLOR_SENSOR, 255, 0, 122);
     handleSensor(MAGNETIC_ENCODER_SENSOR, ENC_POSISTIVE, 200);

@@ -7,7 +7,7 @@ typedef struct {
    int id;
 } SinhVien;
 
-#define SV_DEF(_name, _point, _id)     { .ten = _name, .diemTrungBinh = _point, .id = _id}
+#define SV_DEF(_name, _point, _id)     { .ten = _name, .diemTrungBinh = _point, .id = _id }
 
 int stringCompare(const char *str1, const char *str2) {
    while (*str1 && (*str1 == *str2)) {
@@ -32,7 +32,6 @@ int compareByDiemTrungBinh(const void *a, const void *b) {
    {
        return 1;
    }
-  
    return 0;
 }
 
@@ -48,42 +47,48 @@ void sort(SinhVien array[], size_t size, int (*compareFunc)(const void *, const 
    int i, j;
    SinhVien temp;
    for (i = 0; i < size-1; i++)    
-       for (j = i+1; j < size; j++)
-           if (compareFunc(array+i, array+j)>0) {
-               temp = array[i];
-               array[i] = array[j];
-               array[j] = temp;
-           }
+      for (j = i+1; j < size; j++)
+         if (compareFunc(array+i, array+j)>0) {
+            temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+         }
 }
 
-void display(SinhVien *array, size_t size) {
+// void display(SinhVien *array, size_t size) {
+//    for (size_t i = 0; i < size; i++) {
+//       printf("ID: %d, Ten: %s, Diem Trung Binh: %.2f\n", array[i].id, array[i].ten, array[i].diemTrungBinh);
+//    }
+//    printf("\n");
+// }
+
+void display(SinhVien array[], size_t size) {
    for (size_t i = 0; i < size; i++) {
-       printf("ID: %d, Ten: %s, Diem Trung Binh: %.2f\n", array[i].id, array[i].ten, array[i].diemTrungBinh);
+      printf("ID: %d, Ten: %s, Diem Trung Binh: %.2f\n", (array+i)->id, (array+i)->ten, (array+i)->diemTrungBinh);
    }
    printf("\n");
 }
 
 int main() {
-    SinhVien danhSachSV[] = {   SV_DEF("Hoang", 7.5, 100),
-                                SV_DEF("Tuan", 4.5, 101),
-                                SV_DEF("Vy", 6.8, 102),
-                                SV_DEF("Ngan", 5.6, 10)};
-    size_t size = sizeof(danhSachSV) / sizeof(danhSachSV[0]);
+   SinhVien danhSachSV[] = {  // { .ten = "Hoang", .diemTrungBinh = 0.5, .id = 100 },
+                              SV_DEF("Hoan", 7.5, 100),
+                              SV_DEF("Hoang", 4.5, 101),
+                              SV_DEF("Vy", 6.8, 102),
+                              SV_DEF("Ngan", 5.6, 10)};
+                              
+   size_t size = sizeof(danhSachSV) / sizeof(danhSachSV[0]);
 
-    // Sắp xếp theo tên
-    sort(danhSachSV, size, compareByName);
+   // Sắp xếp theo tên
+   sort(danhSachSV, size, compareByName);
+   display(danhSachSV, size);
 
-    display(danhSachSV, size);
+   // Sắp xếp theo điểm trung bình
+   sort(danhSachSV, size, compareByDiemTrungBinh);
+   display(danhSachSV, size);
 
-    // Sắp xếp theo điểm trung bình
-    sort(danhSachSV, size, compareByDiemTrungBinh);
+   // Sắp xếp theo ID
+   sort(danhSachSV, size, compareByID);
+   display(danhSachSV, size);
 
-    display(danhSachSV, size);
-
-    // Sắp xếp theo ID
-    sort(danhSachSV, size, compareByID);
-
-    display(danhSachSV, size);
-
-    return 0;
+   return 0;
 }
