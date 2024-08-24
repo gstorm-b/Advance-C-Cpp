@@ -643,7 +643,10 @@ Thắc mắc: Biến và hàm static toàn cục khi khai báo ở file header (
 
 ### Từ khóa register
 
-![alu_register_ram.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/60df634e-cb88-4675-bc25-792b4c07f792/alu_register_ram.svg)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dcfa0002-01e9-4c82-9096-6b11ef19e123" width="50%">
+</p>
+
 
 ALU (Arithmetic Logic Unit) có nhiệm vụ các phép toán trong chương trình. Và ALU chỉ làm việc với thanh ghi.
 
