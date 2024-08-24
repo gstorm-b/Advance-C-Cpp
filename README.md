@@ -644,7 +644,7 @@ Thắc mắc: Biến và hàm static toàn cục khi khai báo ở file header (
 ### Từ khóa register
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/dcfa0002-01e9-4c82-9096-6b11ef19e123" width="50%">
+  <img src="https://github.com/user-attachments/assets/dcfa0002-01e9-4c82-9096-6b11ef19e123" width="90%">
 </p>
 
 
