@@ -416,3 +416,322 @@ ptr_2 : 144701480       - *ptr_2 : 144701488    - **ptr_2 = 9.200
 ```
 
 </details>
+
+# Bài 4: Extern - Static - Volatile
+<details>
+<summary>nội dung</summary>
+
+<h2>Extern</h2>
+
+**Từ khóa extern dùng để khai báo một biến toàn cục hoặc hàm đã được định nghĩa (khai báo và cấp phát bộ nhớ) ở một file khác. Tức là có thể sử dụng biến toàn cục hoặc hàm của một file khác.**
+
+- Khai báo một biến và gán giá trị cho nó thì nó phải nằm ở file source (.c).
+
+Ví dụ khai báo và sử dụng một hàm và biến toàn cục ở một file source khác:
+
+```c
+/* scale.c */
+
+#include "scale.h"
+
+double scale_factor = 0.5;
+
+double calcLength(double len) {
+    return len*scale_factor;
+}
+
+```
+
+```c
+/* main.c */
+
+#include <stdio.h>
+// #include "sum.h" => ví dụ này không dùng include
+
+// dùng từ khóa extern để báo đây là một biến toàn cục và một function đã được định nghĩa ở một file kkhác.
+extern double scale_factor;
+extern double calcLength(double len);
+
+int main(void) {
+
+    double obj_len = 10.0;
+    // gọi hàm tính độ dài với scale factor được định nghĩa ở một file khác với.
+    printf("Length: %.3f.\n", calcLength(obj_len));
+    // do đã dùng từ khóa extern để khai báo scale_factor
+	  // thay đổi giá trị scale_factor được định nghĩa file scale.c
+	  // và tính lại độ dài một lần nữa với scale_factor vừa thay đổi.
+    scale_factor = 2;
+    printf("Length: %.3f.\n", calcLength(obj_len));
+
+    return 0;
+}
+
+/* Kết quả in trên terminal
+Length: 5.000.
+Length: 20.000.
+*/
+```
+
+## Static
+
+### Biến static cục bộ
+
+**Static local variables là những biến cục bộ được khai báo và cấp phát địa chỉ một lần duy nhất và chỉ thu hồi vùng nhớ của biến khi kết thúc chương trình.**
+
+Local variables: biến cục bộ là biến được khai báo bên trong hàm chỉ có phạm vi sử dụng bên trong hàm.
+
+Ứng dụng: 
+
+- Sử dụng trong trường hợp cần giữ lại giá trị của biến trong các lần gọi hàm.
+- Thực hiện khởi tạo cho hàm một lần duy nhất.
+
+    Ví dụ sử dụng biến static cục bộ:
+    
+    ```c
+    #include <stdio.h>
+    
+    void countObject() {
+    		// biến counter sẽ được khai báo ở lần đầu tiên gọi hàm
+    		// khi gọi những lần tiếp theo chương trình sẽ không khai báo lại 
+    		// mà dùng sửa dụng lại vùng nhớ đã cấp phát trước đó.
+    		// nên giá trị của biến counter sẽ được cộng lên ở mỗi lên gọi hàm
+        static int counter = 0;
+        printf("Add object %d.\n", ++counter);
+    }
+    
+    int main(void) {
+        countObject();
+        countObject();
+        countObject();
+        countObject();
+        countObject();
+    }
+    
+    /* Kết quả in ra màn hình
+    Add object 1.
+    Add object 2.
+    Add object 3.
+    Add object 4.
+    Add object 5.
+    */
+    ```
+    
+    ```c
+    
+    #include <stdio.h>
+    #include <time.h>
+    
+    #define TIMER_INIT      0
+    #define TIMER_RUN       1
+    #define TIME_OUT        0
+    
+    /*
+    function timer sửa dụng hai biến static cục bộ:
+    state để kiểm tra trạng thái của timer, khởi tạo giá trị cho time_stamp khi timer bắt đầu chạy.
+    time_stamp lưu giá trị clock để so sánh cho những lần gọi sau. Tính xem timer đã time out hay chưa.
+    */
+    int timer(int interval) {
+        static clock_t time_stamp;
+        static int state = TIMER_INIT;
+    
+        if (state == TIMER_INIT) {
+            time_stamp = clock();
+            state = TIMER_RUN;
+        } else {
+            if ((clock() - time_stamp) >= interval) {
+                state = TIMER_INIT;
+                return TIME_OUT;
+            }
+        }
+        
+        return TIMER_RUN;
+    }
+    
+    int main(void) {
+    
+        int counter = 1;
+        while (1) {
+            if (timer(1000) == TIME_OUT) {
+                printf("Time out.\n");
+                if (counter == 5) {
+                    break;
+                }
+                counter++;
+            }
+        }
+    
+        return 0;
+    }
+    ```
+    
+
+### Biến static toàn cục
+
+**Static global variables là những biến toàn cục chỉ có thể sử dụng trong phạm vi của file chứa nó và không cho phép extern để file khác sử dụng.**
+
+Global variables: 
+
+- Biến toàn cục là biến được khai báo không nằm trong hàm nào.
+- Không thể extern biến static toàn cục để sử dụng ở một file khác. (Tương tự với hàm static)
+    
+    ⇒ Có thể sử dụng biến hoặc hàm static ở một file khác thông qua function được định nghĩa ở chính file đó.
+    
+
+Ứng dụng: để hạn chế gọi hàm hoặc biến ở ngoài file chứa nó (Trong trường hợp thiết kế thư viện sẽ dùng với mục đích không cho phép người sử dụng gọi hàm hoặc biến không được phép truy cập làm ảnh hưởng kết quả của chương trình).
+
+- Ví dụ sử dụng biến static toàn cục:
+    - Khi viết một thư viện nhưng không muốn người sử dụng sử dụng các hàm tính toán trong đó hay thay đổi những biến trong đó ta sẽ định nghĩa nó ở dạng static.
+    - Trong ví dụ này chỉ khai báo biến scale_factor và hàm calcLength trong file sum.c, ngoài file này ra không có file nào có thể sử dụng được biến và hàm này.
+    - Người dùng chỉ có thể gọi được function showLength khi include file  sum.h
+    
+    ```c
+    /* file name: sum.h */
+    #ifndef SUM_H
+    #define SUM_H
+    
+    #define OBJECT_1
+    // #define OBJECT_2
+    // #define OBJECT_3
+    
+    void showLength(double len);
+    
+    #endif
+    ```
+    
+    ```c
+    /* file name: sum.c */
+    
+    #include "sum.h"
+    #include <stdio.h>
+    
+    #ifdef OBJECT_1
+        #define _SCALE_FACTOR   0.5
+    #elif OBJECT_2
+        #define _SCALE_FACTOR   1.2
+    #elif OBJECT_3
+        #define _SCALE_FACTOR   0.8
+    #else
+        #define _SCALE_FACTOR   1.0
+    #endif
+    
+    static double scale_factor = _SCALE_FACTOR;
+    
+    static double calcLength(double len) {
+        return len*scale_factor;
+    }
+    
+    void showLength(double len) {
+        printf("Length: %.3f.\n", calcLength(len));
+    }
+    ```
+    
+    ```c
+    /* file name: main.c */
+    
+    #include <stdio.h>
+    #include "sum.h"
+    
+    int main(void) {
+        double obj_len = 10.0;
+        showLength(obj_len);
+        return 0;
+    }
+    ```
+    
+
+Thắc mắc: Biến và hàm static toàn cục khi khai báo ở file header (.h) thì chỉ có thể sử dụng trong phạm vi file header. Nên thông thường người ta sẽ khai báo biến và hàm static toàn cục trong file source (.c) để có ghể gọi từ các hàm khác như trong ví dụ ở phía trên.
+
+### Từ khóa register
+
+![alu_register_ram.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/60df634e-cb88-4675-bc25-792b4c07f792/alu_register_ram.svg)
+
+ALU (Arithmetic Logic Unit) có nhiệm vụ các phép toán trong chương trình. Và ALU chỉ làm việc với thanh ghi.
+
+Khi một biến được khai báo chương trình sẽ cấp phát bộ nhớ của biến đó tại một địa chỉ trên RAM.
+
+Các bước vi xử lí thực hiện một phép toán:
+
+- Chuyển giá trị tại vùng nhớ cần tính trên RAM vào register.
+- ALU lấy giá trị trên register tính toán sau đó trả giá trị vào register.
+- Register chuyển kết quả nhận được từ ALU vào lại RAM.
+
+⇒ Tốc độ thực thi của chương trình phụ thuộc nhiều vào tốc độ truyền dự liệu của RAM.
+
+**Từ khóa register sẽ báo cho compiler khai báo và cấp phát bộ nhớ của biến đó trên thanh ghi. Giúp giảm bước truyền nhận dữ liệu giữa RAM và Register nên chương trình thực sẽ thi nhanh hơn. Chỉ có thể sử dụng từ khóa register với những biến cục bộ.**
+
+**Bộ nhớ của register ít và không thể mở rộng giới hạn được như RAM.**
+
+Ứng dụng: khai báo các biến dùng thường xuyên và xử lí tính toán với những biến đó ưu tiên tốc độ.
+
+Ví dụ sử dụng hai biến được định với từ khóa register và không có từ khóa register:
+    
+- Với từ khóa register biến index sẽ được khai báo và cấp phát bộ nhớ trong thanh ghi thay vì trên RAM.
+        
+    ⇒ Tốc độ thực thi hàm khi sử dụng register để khai báo biến index sẽ nhanh hơn.
+        
+
+    ```c
+    #include <stdio.h>
+    #include <time.h>
+    
+    void showTime() {
+        clock_t time_start;
+        time_start = clock();
+    
+        register unsigned long index;
+        // unsigned long index;
+        
+        unsigned long number = 100000000;
+    
+        for(index=0;index<number;index++) {
+    
+        }
+    
+        printf("Execution time: %.5f\n", (double)((clock() - time_start)/1000.0));
+    }
+    
+    int main(void) {
+    
+        showTime();
+        
+        return 0;
+    }
+    
+    /* Output:
+    Execution time: 0.22800 (without register)
+    Execution time: 0.03500 (with register)
+    */
+    ```
+    
+
+Thắc mắc: Nếu biến được khai báo và cấp phát bộ nhớ trên thanh ghi của vi xử lí thì có thể dùng con trỏ để trỏ đến biến đó hay lấy địa chỉ như một biến thông thường được cấp phát bộ nhớ trên RAM hay không?
+
+## Từ khóa Volatile
+
+Vi điều khiển có bộ nhớ giới hạn, nên khi build chương trình compiler sẽ tối ưu bộ nhớ bằng các bỏ qua các biến không thay đổi giá trị trong quá trình chạy chương trình.
+
+```c
+int main() {
+	while(1) {
+		int number_a = 10;
+		int number_b = read_number();
+        number_a;
+        number_b;
+	}
+}
+```
+
+Trong đoạn code phía trên khi compiler thấy biến cục bộ number_a không thay đổi giá trị phía bên trong while nên compiler sẽ tối ưu biến này. Tương tự với number_b, tuy được khai báo và gán giá trị là giá trị trả về của một hàm nhưng compiler vẫn sẽ tối ưu number_b.
+
+**Từ khóa Volatile sẽ báo cho compiler không tối ưu biến đó.**
+
+```c
+volatile number_a = 10;
+```
+
+Ứng dụng:
+
+- Khai báo volatile để tránh những lỗi chạy chương trình khi compiler tối ưu biến đó.
+- Thường được sửa dụng nhiều trong RTOS. (Khi một biến toàn cục được thay đổi giá trị ở nhiều task khác nhau, dùng votatile để tránh compiler tối ưu biến đó bên trong một task)
+
+</details>
