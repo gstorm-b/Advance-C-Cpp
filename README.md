@@ -738,3 +738,119 @@ volatile number_a = 10;
 - Thường được sửa dụng nhiều trong RTOS. (Khi một biến toàn cục được thay đổi giá trị ở nhiều task khác nhau, dùng votatile để tránh compiler tối ưu biến đó bên trong một task)
 
 </details>
+
+# 5. Goto - Setjmp
+<details>
+<summary>nội dung</summary>
+
+## Goto
+
+**Từ khóa goto sẽ cho phép nhảy đến một label được đặt trong phạm vi của hàm gọi từ khóa goto.**
+
+Các trường hợp ứng dụng goto:
+
+- Thoát khỏi nhiều vòng lặp chồng lên nhau.
+- Finite State Machines.
+- Lập trình các ứng dụng menu, quét lét,…
+
+    Ví dụ sử dụng goto để thoát ra khỏi 3 cấp vòng lặp, thay vì sử dụng break để thoát ra khỏi từng vòng lặp:
+    
+    ```c
+    #include <stdio.h>
+    
+    int main(void) {
+    
+        while(1) {
+            for(int col=0;col<10;col++) {
+                for(int row=0;row<10;row++) {
+                    if((col==5)&&(row==8)) {
+                        goto exit_loops;
+                    }
+                    printf("Col: %d, Row: %d\n", col, row);
+                }
+            }
+        }
+    
+        exit_loops:
+    
+        return 0;
+    }
+    ```
+    
+
+## Setjmp
+
+**setjump là thư viện chuẩn của C, hỗ trợ macro setjmp và function longjmp.**
+
+- Macro setjmp(BUF): thiết lập một vị trí trong chương trình mà khi gọi longjmp chương trình sẽ nhảy lệnh đó và trả về một giá trị.
+    - BUF là tham số truyền vào có kiểu dữ liệu là jmp_buf.
+    - Ở lần đầu tiên thực thi setjmp sẽ trả về giá trị 0.
+    - Ở những lần thực thi tiếp theo setjmp sẽ trả về giá trị tương ứng với tham số thứ 2 của longjmp.
+- Function longjmp(jmp_buf _Buf,int _Value): nhảy đến vị trị đã set của tham số đầu tiên và trả về giá trị của tham số thứ hai.
+
+⇒ setjump thường được sử dụng cho xử lí ngoại lệ trong C.
+
+- Ví dụ sử dụng setjmp và longjmp:
+    - Ví dụ xử lí những ngoại lệ như truyền vào mảng không hợp lệ (size = 0) hoặc không nằm trong range.
+    - Gọi marco setjmp trong main để thiết lập điểm nhảy tới khi gọi longjmp (xảy ra ngoại lệ).
+    - Ở lần đầu tiên setjmp sẽ trả về 0, tức là exception_code có giá trị là 0, tương ứng với case ERR_NONE ⇒ Chạy function xử lí mảng.
+    - Nếu những điều kiện đặt ra không thỏa mãn như mảng có độ dài = 0, hoặc giá trị phần tử vượt ngoài range thì longjump sẽ được gọi và truyền vào giá trị lỗi tương tứng ở tham số thứ 2. ⇒ chương trình sẽ qua lại chỗ setjump và lúc này exception_code mang một giá trị khác.
+    - Những case lỗi (ERR_ARRAY_SIZE, ERR_OUT_RANGE) là nơi sẽ thực hiện xử lí khi có ngoại lệ xảy ra.
+    - Trong trường hợp phát hiện ra lỗi, ngoại lệ vẫn có thể chạy tiếp các lệnh khác ở phía dưới.
+    
+    ```c
+    #include <stdio.h>
+    #include <setjmp.h>
+    
+    #define ERR_NONE            0
+    #define ERR_ARRAY_SIZE      1
+    #define ERR_OUT_RANGE       2
+    
+    #define VAL_MIN             0
+    #define VAL_MAX             10
+    
+    jmp_buf buf;
+    int exception_code;
+    
+    void checkOutRange(int value) {
+        if ((value < VAL_MIN)  || (value > VAL_MAX)) {
+            longjmp(buf, ERR_OUT_RANGE);
+        }
+    }
+    
+    void arrayProcess(int *const arr, int size) {
+        if (size <= 0 ) {
+            longjmp(buf, ERR_ARRAY_SIZE);
+        }
+    
+        for(int index=0;index<size;index++) {
+            checkOutRange(*(arr+index));
+            printf("Number at <index>: %d.\n", *(arr+index));
+        }
+    }
+    
+    int main(void) {
+    
+        int num_list[] = { 0, 2, 4, 5, 6, 3, 12};
+        int list_size = sizeof(num_list)/sizeof(int);
+    
+        exception_code = setjmp(buf);
+    
+        switch (exception_code) {
+            case ERR_NONE:
+                arrayProcess(num_list, list_size);
+    		        // arrayProcess(num_list, 0);
+                break;
+            case ERR_ARRAY_SIZE:
+                printf("Input Array invalid...\n");
+                break;
+            case ERR_OUT_RANGE:
+                printf("Value out of range...\n");
+                break;
+        }
+    
+    		printf("Handle another features...\n");
+        return 0;
+    }
+    ```
+ </detail>
