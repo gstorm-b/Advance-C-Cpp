@@ -854,7 +854,7 @@ Các trường hợp ứng dụng goto:
     }
     ```
 
-</detail>
+</details>
 
 # Bài 6: Bitmask
 <details>
@@ -1046,4 +1046,4 @@ output = input >> 5;
     
     Với feature_3 chỉ chiếm 1 bit để lưu trữ lên khi chỉ có thể gán 0b1 hoặc 0b0 nếu gán giá trị lớn hơn (ví dụ: 0b10) sẽ làm mất dữ liệu do 1 bit không thể lưu hết.
 
-</detail>
+</details>
