@@ -853,4 +853,197 @@ Các trường hợp ứng dụng goto:
         return 0;
     }
     ```
- </detail>
+
+</detail>
+
+# Bài 6: Bitmask
+<details>
+<summary>nội dung</summary>
+
+**Bitmask là một kỹ thuật lập trình, sử dụng các toán tử bitwise để thao tác hoặc lưu trữ thông tin với đơn vị bit.**
+
+Ứng dụng: Tối ưu hóa bộ nhớ sử dụng, quản lí thuộc tính của đối tượng,…
+
+## Các toán tử bitwise:
+
+### AND
+
+**Toán tử AND ( & ) sẽ thực hiện phép AND Logic cho từng cặp bit của hai giá trị cần thực hiện phép toán.**
+
+| Input 1 | Input 2 | Output |
+| --- | --- | --- |
+| 0 | 0 | 0 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |
+
+⇒ Chỉ khi bit input 1 và bit input 2 đều là 1 thì kết quả mới là 1.
+
+Ví dụ:
+
+```c
+uint8_t input_1 = 0b01001100;
+uint8_t input_2 = 0b00101100;
+uint8_t output  = input_1 & input_2;
+/*   => output  = 0b00001100  */
+```
+
+### OR
+
+**Toán tử OR ( | ) sẽ thực hiện phép OR Logic cho từng cặp bit của hai giá trị cần thực hiện phép toán.**
+
+| Input 1 | Input 2 | Output |
+| --- | --- | --- |
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 1 |
+
+⇒ Chỉ cần tối thiểu 1 trong hai bit input là 1 thì kết quả là 1.
+
+Ví dụ: 
+
+```c
+uint8_t input_1 = 0b01001100;
+uint8_t input_2 = 0b00101100;
+uint8_t output  = input_1 | input_2;
+/*   => output  = 0b01101100  */
+```
+
+### XOR
+
+**Toán tử XOR ( ^ ) sẽ thực hiện phép XOR Logic cho từng cặp bit của hai giá trị cần thực hiện phép toán.**
+
+| Input 1 | Input 2 | Output |
+| --- | --- | --- |
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+⇒ Nếu một cả hai bit input cùng là 0 hoặc cùng là 1 thì kết quả sẽ là 0. Ngược lại chỉ có 1 trong hai input là 1 là kết quả là 1.
+
+```c
+uint8_t input_1 = 0b01001100;
+uint8_t input_2 = 0b00101100;
+uint8_t output  = input_1 ^ input_2;
+/*   => output  = 0b01100000  */
+```
+
+### NOT
+
+**Toán tử NOT ( ~ )  sẽ thực hiện phép NOT Logic, đảo ngược giá trị của bit.**
+
+```c
+uint8_t input  = 0b01001100;
+uint8_t output = ~input;
+/*   => output = 0b10110011  */
+```
+
+### Shift left - Shift right
+
+**Shift left ( << ) là toán tử dịch bit sang trái, các bit được chèn vào phía bên phải sẽ là 0.**
+
+```c
+uint8_t input  = 0b00000001;
+uint8_t output = input << 2;
+/*   => output = 0b00000100  */
+output = input << 5;
+/*   => output = 0b00100000  */
+```
+
+**Shift right ( >> ) là toán tử dịch bit sang phải, các bit được chèn vào phía bên trái sẽ là 0.**
+
+```c
+uint8_t input  = 0b10000001;
+uint8_t output = input >> 2;
+/*   => output = 0b00100000  */
+output = input >> 5;
+/*   => output = 0b00000100  */
+```
+
+- Ví dụ sử dụng bitmask:
+    - Sử dụng bitmask để thay đổi giá trị tại một bit chỉ định mà vẫn giữ nguyên giá trị cho các bit còn lại.
+    - Sử dụng bitmask để đọc ra giá trị của từng bit.
+    
+    ```c
+    #include <stdio.h>
+    #include <stdint.h>
+    
+    uint8_t port_State = 0;
+    
+    void portWrite(uint8_t pin_number, uint8_t value) {
+        if(value == 0) {
+            port_State &= ~(1 << pin_number);
+        } else if (value == 1) {
+            port_State |= (1 << pin_number);
+        }
+    }
+    
+    char *const showBinary(uint8_t value) {
+        static char bin[9];
+    
+        for(int index=0;index<8;index++) {
+            uint8_t single_bit = (value >> index) & 1;
+            bin[7-index] = ((single_bit == 0) ? '0' : '1');
+        }
+    
+        return bin;
+    }
+    
+    int main(void) {
+        // printf("0b%s", showBinary(0b00100));
+    
+        printf("%s\n", showBinary(port_State));
+        portWrite(0, 1);
+        printf("%s\n", showBinary(port_State));
+        portWrite(2, 1);
+        printf("%s\n", showBinary(port_State));
+        portWrite(7, 1);
+        printf("%s\n", showBinary(port_State));
+        portWrite(0, 0);
+        printf("%s\n", showBinary(port_State));
+        portWrite(7, 0);
+        printf("%s\n", showBinary(port_State));
+        
+        return 0;
+    }
+    ```
+    
+
+### Bit fields
+
+**Bit fields trong struct giúp tối ưu bộ nhớ khi khai báo và sử dụng một struct bằng cách xác định số bit sẽ dùng để lưu một phần tử trong struct.**
+
+- Ví dụ sử dụng Bit fields 1:
+    
+    ```c
+    typedef struct {
+        uint8_t bit_0 : 1;
+        uint8_t bit_1 : 1;
+        uint8_t bit_2 : 1;
+        uint8_t bit_3 : 1;
+        uint8_t bit_4 : 1;
+        uint8_t bit_5 : 1;
+        uint8_t bit_6 : 1;
+        uint8_t bit_7 : 1;
+    } GPIO_PORT;
+    ```
+    
+    Như ví dụ ở trên, struct có tên GPIO_PORT có 8 phần tử kiểu uint8_t, tuy nhiên mỗi phần tử chỉ sử dụng 1 bit để lưu giá trị thay vì 1 byte. Nên struct này chỉ chiếm 1 byte bộ nhớ.
+    
+- Ví dụ sử dụng Bit fields 2:
+    
+    ```c
+    typedef struct {
+        uint8_t feature_1 : 4;
+        uint8_t feature_2 : 4;
+        uint8_t feature_3 : 1;
+    } Features;
+    ```
+    
+    Như ví dụ ở trên feature_3 sử dụng 1 bit, nhưng hai phần tử trước đó đã đủ 8 bit, nên lúc này struct Features sẽ chiếm 2 byte bộ nhớ.
+    
+    Với feature_3 chỉ chiếm 1 bit để lưu trữ lên khi chỉ có thể gán 0b1 hoặc 0b0 nếu gán giá trị lớn hơn (ví dụ: 0b10) sẽ làm mất dữ liệu do 1 bit không thể lưu hết.
+
+</detail>
