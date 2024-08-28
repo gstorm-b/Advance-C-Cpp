@@ -1221,3 +1221,9 @@ int main(void) {
 ⇒ Khi sử dụng struct và union thường sẽ thiết kế các member để không có padding.
 
 </details>
+
+![union_memory](https://github.com/user-attachments/assets/39695979-01f7-417e-bb88-063759a1dd52)
+![struct_padding_2](https://github.com/user-attachments/assets/65bdd7ad-5e32-4160-aa95-27c101af01be)
+![struct_padding](https://github.com/user-attachments/assets/f5007d6b-a25f-4497-a972-e7c20494411a)
+
+
