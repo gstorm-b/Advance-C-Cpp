@@ -1103,7 +1103,10 @@ typedef struct {
 } struct_1;
 ```
 
-![struct_padding.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/73b908d7-c020-462c-be40-dcf7e300baf5/struct_padding.svg)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f5007d6b-a25f-4497-a972-e7c20494411a" width="60%">
+</p>
+
 
 struct_1 mặc dùng tổng size của ba phần tử là 7 byte tuy nhiên struct_1 có kích thước là 12 byte:
 
@@ -1124,7 +1127,9 @@ typedef struct {
 } struct_2;
 ```
 
-![struct_padding_2.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/98857ad8-b0b1-40de-949b-a68be412e382/struct_padding_2.svg)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/65bdd7ad-5e32-4160-aa95-27c101af01be" width="60%">
+</p>
 
 struct_2 có kích thước là 8 byte trong đó có 1 byte padding.
 
@@ -1152,7 +1157,9 @@ member_1 = 254
 */
 ```
 
-![union_memory.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9506489f-5187-4daa-91e9-e216d11f8d05/union_memory.svg)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/39695979-01f7-417e-bb88-063759a1dd52" width="70%">
+</p>
 
 Do tất cả member của union đều dùng chung vùng nhớ và có cùng địa chỉ bắt đầu nên khi gán giá trị cho member_3 như ví dụ ở trên thì thực chất cũng là thay đổi giá trị của member_1 và member _2.
 
@@ -1221,9 +1228,3 @@ int main(void) {
 ⇒ Khi sử dụng struct và union thường sẽ thiết kế các member để không có padding.
 
 </details>
-
-![union_memory](https://github.com/user-attachments/assets/39695979-01f7-417e-bb88-063759a1dd52)
-![struct_padding_2](https://github.com/user-attachments/assets/65bdd7ad-5e32-4160-aa95-27c101af01be)
-![struct_padding](https://github.com/user-attachments/assets/f5007d6b-a25f-4497-a972-e7c20494411a)
-
-
