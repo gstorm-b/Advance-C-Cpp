@@ -1047,3 +1047,177 @@ output = input >> 5;
     Với feature_3 chỉ chiếm 1 bit để lưu trữ lên khi chỉ có thể gán 0b1 hoặc 0b0 nếu gán giá trị lớn hơn (ví dụ: 0b10) sẽ làm mất dữ liệu do 1 bit không thể lưu hết.
 
 </details>
+
+# Bài 7. Struct - Union
+
+<details> 
+<summary>nội dung</summary>
+
+# 7. Struct - Union
+
+## Struct
+
+**Struct là cấu trúc dữ liệu chứa nhiều biến member do người lập trình định nghĩa, mỗi member có một vùng nhớ riêng.**
+
+Sử dụng struct:
+
+```c
+struct Car{
+    char name[50];
+    double maxSpeed;
+    double maxAccel;
+    int seats;
+};
+
+// Khai báo một struct và dữ liệu
+struct Car myCar = {.name = "Honda", .maxSpeed = 200.0, .maxAccel = 500.0, .seats = 4};
+// truy cập đến struct member
+myCar.maxSpeed = 150.0;
+struct Car* ptr = &myCar;
+// con trỏ truy cập đến struct member
+ptr->seats = 6;
+```
+
+Sử dụng từ khóa typedef thêm tên cho struct để rút gọn cú pháp khai báo biến:
+
+```c
+typedef struct {
+    char name[50];
+    double maxSpeed;
+    double maxAccel;
+    int seats;
+} Car;
+
+Car myCar = {.name = "Honda", .maxSpeed = 200.0, .maxAccel = 500.0, .seats = 4};
+```
+
+### Padding của Struct:
+
+Cách sắp xếp vùng nhớ của struct:
+
+```c
+typedef struct {
+    uint8_t member_1;
+    uint32_t member_2;
+    uint16_t member_3;
+} struct_1;
+```
+
+![struct_padding.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/73b908d7-c020-462c-be40-dcf7e300baf5/struct_padding.svg)
+
+struct_1 mặc dùng tổng size của ba phần tử là 7 byte tuy nhiên struct_1 có kích thước là 12 byte:
+
+- compiler sẽ chọn kích thước của phần tử lớn nhất để làm tham chiếu sắp xếp vị trí cho các phần tử còn lại.
+- struct_1 sẽ chọn kích thước 4 làm bội số và một phần tử sẽ hoàn toàn đặt trong một vùng nhớ 4 byte.
+- member_1 là phần tử đầu tiên, có kích thước là 1 byte, giả sử địa chỉ bắt đầu của biến struct này là 0xF0. member 1 sẽ đặt ở 0xF0.
+- member_2 có kích thước là 4 byte và nếu đặt vào địa chỉ 0xF1 sẽ thừa ra 1 byte (tại 0xF4) vào vùng nhớ 4 byte kế tiếp. Nên member_2 sẽ bắt đầu từ 0xF4 và 3 byte không được sử dụng trong vùng nhớ 4 byte đầu tiên gọi là padding.
+- Tương tự member_3 sẽ bắt đầu từ địa chỉ 0xF8 và 2 byte còn lại là padding.
+    
+    ⇒ Kích thước của struct sẽ là 7 byte + 5 byte padding = 12 byte.
+    
+
+```c
+typedef struct {
+    uint8_t member_1;
+    uint16_t member_2;
+    uint32_t member_3;
+} struct_2;
+```
+
+![struct_padding_2.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/98857ad8-b0b1-40de-949b-a68be412e382/struct_padding_2.svg)
+
+struct_2 có kích thước là 8 byte trong đó có 1 byte padding.
+
+Ứng dụng nhiều trong xử lí json và list.
+
+### Union
+
+**Union là cấu trúc dữ liệu mà tất cả member đều sử dụng chung 1 vùng nhớ và có địa chỉ bắt đầu giống nhau.**
+
+Ví dụ:
+
+```c
+typedef union {
+    uint8_t member_1;
+    uint16_t member_2;
+    uint32_t member_3;
+} union_1;
+
+union_1 myUnion;
+myUnion.member_3 = 1048574;
+/*
+member_3 = 1048574
+member_2 = 65534
+member_1 = 254
+*/
+```
+
+![union_memory.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9506489f-5187-4daa-91e9-e216d11f8d05/union_memory.svg)
+
+Do tất cả member của union đều dùng chung vùng nhớ và có cùng địa chỉ bắt đầu nên khi gán giá trị cho member_3 như ví dụ ở trên thì thực chất cũng là thay đổi giá trị của member_1 và member _2.
+
+member_1 chỉ chiếm 1 byte tính từ địa chỉ bắt đầu nên giá trị member_1 là giá trị tại byte đầu tiên của member_3. Tương tụ với member_2.
+
+Kích thước của Union:
+    
+- Kích thước của một union là kích thước của member lớn nhất cộng với tổng số padding.
+    
+    ```c
+    typedef union {
+        uint8_t member_1[1];
+        uint16_t member_2[5];
+        uint32_t member_3[2];
+    } union_1;
+    
+    /*
+    	Kích thước của union_1 là 12
+    	Do uint32_t là kiểu dự liệu có size lớn nhất trong union, nên 4 byte sẽ được tính là bội số.
+    	member_2 là phần tử có kích thước lớn nhất, 10 byte, tuy nhiên với bội số 4 thì vùng nhớ 4 byte cuối cùng sẽ gồm 2 byte của member_2 và 2 byte padding.
+    */
+    
+    typedef union {
+        uint8_t member_1[13];
+        uint16_t member_2[5];
+        uint32_t member_3[2];
+    } union_2;
+    
+    /*
+    	Kích thước của union_2 là 16
+    	member 1 có kích thước lớn nhất 13 byte, tuy nhiên với bội số 4 thì vùng nhớ 4 byte cuối cùng sẽ gồm 1 byte của member_1 và 3 byte padding.
+    */
+    ```
+    
+Ứng dụng của Union và Struct trong embedded:
+    
+```c
+typedef union {
+    struct {
+        uint8_t id[2];
+        uint8_t data[4];
+        uint8_t check_sum[2];
+    } data;
+    
+    uint8_t frame[8];
+} DataFrame;
+
+int main(void) {
+    DataFrame transmitter_data;
+    DataFrame receiver_data;
+
+    strcpy(transmitter_data.data.id, "10");
+    strcpy(transmitter_data.data.data, "1234");
+    strcpy(transmitter_data.data.check_sum, "70");
+    
+    strcpy(receiver_data.frame, transmitter_data.frame);
+
+    return 0;
+}
+```
+    
+- data và frame dùng chung vùng nhớ.
+- Khi muốn thay đổi thành phần của frame truyền đi sẽ thay đổi giá trị các member của data.
+- Khi truyền từng byte dữ liệu đi sẽ dùng member frame.
+
+⇒ Khi sử dụng struct và union thường sẽ thiết kế các member để không có padding.
+
+</details>
