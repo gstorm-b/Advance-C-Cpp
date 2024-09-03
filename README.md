@@ -1236,8 +1236,9 @@ int main(void) {
 <details> 
 <summary>nội dung</summary>
 
-
-![layout_memory.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/ec84dc1e-7d75-4d1c-bb78-bc3b4b3836d9/layout_memory.svg)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/859fe813-2556-472e-a67f-1a86291fc8d7" width="50%">
+</p>
 
 ## Memory layout
 
@@ -1392,5 +1393,3 @@ Tuy nhiên có khác biệt:
 
 </details>
 
-
-![layout_memory](https://github.com/user-attachments/assets/859fe813-2556-472e-a67f-1a86291fc8d7)
