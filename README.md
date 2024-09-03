@@ -1228,3 +1228,166 @@ int main(void) {
 ⇒ Khi sử dụng struct và union thường sẽ thiết kế các member để không có padding.
 
 </details>
+
+
+
+# 8. Memory layout
+
+<details> 
+<summary>nội dung</summary>
+
+
+![layout_memory.svg](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/ec84dc1e-7d75-4d1c-bb78-bc3b4b3836d9/layout_memory.svg)
+
+## Memory layout
+
+Chương trình sau khi compile thành executable file sẽ được lưu trong bộ nhớ Flash hoặc ROM. Khi bắt đầu chạy chương trình, những vùng nhớ cần thiết sẽ được copy từ Flash sang RAM để thực thi.
+
+Phân vùng nhớ của một chương trình C/C++ gồm 5 phần:
+
+### Text
+
+Text là vùng nhớ có địa chỉ thấp nhất. Phân vùng text chỉ có thể đọc và không ghi được trong quá trình chạy chương trình.
+
+- Chứa các lệnh thực thi của chương trình.
+- Chứa các biến hằng số, vùng nhớ lưu những kí tự được khởi tạo với con trỏ kiểu char.
+
+```c
+char line[12] = "Hello world!";
+char *line1   = "Xin chao!";
+
+int main(void) {
+    printf("%p\n", line);
+    printf("%p\n", *line1);
+    return 0;
+}
+
+/*  Output
+00007ff758f48000
+0000000000000058
+*/
+// Chuỗi "Xin chao!" được khởi tạo ở phân vùng text có địa chỉ 0x0058
+```
+
+### Initialized data - DS (Data segment)
+
+Initialized data - DS (Data segment) là phân vùng lưu global variables, static variables được khởi tạo với giá trị khác 0.
+
+- Có thể thực hiện đọc và ghi giá trị tại phân vùng này.
+- Các biến trong phân vùng data sẽ bị thu hồi vùng nhớ sau khi chương trình kết thúc.
+- Các biến được lưu tại phân vùng DS:
+    
+    ```c
+    int number_a = 10;
+    static number_b = 100;
+    
+    void function() {
+    	static number_c = 200;
+    }
+    ```
+    
+
+### Uninitialized data - BSS (Block started by symbol)
+
+Uninitialized data - BSS (Block started by symbol) là phân vùng lưu global variables, static variables không được khởi tạo giá trị hoặc được khởi tạo với giá trị là 0.
+
+- Có thể thực hiện đọc và ghi giá trị tại phân vùng này.
+- Các biến trong phân vùng data sẽ bị thu hồi vùng nhớ sau khi chương trình kết thúc.
+- Các biến được lưu tại phân vùng BSS:
+    
+    ```c
+    int number_a = 0;
+    static number_b;
+    
+    void function() {
+    	static number_c = 0;
+    }
+    ```
+    
+
+⇒ Các biến tại phân vùng BSS vẫn được giữ nguyên vùng nhớ cho đến khi kết thúc chương trình.
+
+### Stack
+
+Stack là phân vùng nhớ được cấp phát tự động, hoạt động theo cấu trúc LIFO (Last In First Out). Vùng nhớ stack chứa các biến cục bộ, tham số truyền vào của hàm khi được gọi.
+
+- Có thể thực hiện đọc và ghi giá trị tại phân vùng này.
+- Các biến trong phân vùng stack sẽ bị thu hồi vùng nhớ khi hàm kết thúc.
+
+### Heap
+
+Heap là vùng nhớ lưu các biến được cấp phát động trong quá trình thực thi chương trình. Khi không còn sử dụng vùng nhớ đã được cấp phát trên heap thì phải giải phóng vùng nhớ đó. Nếu không giải phóng có thể dẫn tới mất dữ liệu (memory leak) do không còn vùng nhớ để lưu.
+
+Sử dụng các hàm alloc, realloc, free, delete,… từ thư viện stdlib.h để cấp phát bộ nhớ trên vùng heap.
+
+- Ví dụ cấp phát vùng nhớ trên heap
+    
+    ```c
+    // Cấp phát vùng nhớ trên heap và sửa dụng vùng nhớ đó.
+    
+    #include <stdio.h>
+    #include <stdlib.h>
+    
+    void function_1() {
+        int size = sizeof(int)*10;
+        int *list_num = (int *)malloc(size);
+    
+        printf("Malloc size: %d byte.\n", size);
+    
+        for(int index=0;index<10;index++) {
+            list_num[index] = index;
+        }
+    
+        for(int index=0;index<10;index++) {
+            // printf("Address: 0x%p, Value: %d.\n", &list_num[index], list_num[index]);
+            printf("Address: 0x%p, Value: %d.\n", list_num+index, *(list_num+index));
+        }
+        
+        free(list_num);
+    }
+    
+    int main(void) {
+    
+        function_1();
+        return 0;
+    }
+    ```
+    
+
+Một biến constant local có thể thay đổi thay đổi được giá trị của nó thông qua một con trỏ đến địa chỉ của nó, vì biến constant local đó được lưu trên stack. Tuy nhiên khi biên dịch thì compiler sẽ cảnh báo.
+
+Một biến constant global thì không có cách nào thay đổi được giá trị vì nó nằm trên phân vùng text.
+
+## Stack và Heap
+
+- Cả stack và heap đều cho phép đọc và ghi dữ liệu được lưu tại phân vùng đó.
+- Stack để lưu những biến cục bộ và tham số truyền vào khi hàm được gọi, việc cấp phát vùng nhớ là do chương trình quản lí, vùng nhớ sẽ tự động bị thu hồi sau khi thoát khỏi hàm.
+- Heap cho phép cấp phát vùng nhớ và truy cập đến vùng nhớ đó thông qua một con trỏ. Vùng nhớ heap do người lập trình tùy ý cấp phát bộ nhớ, và việc giải phóng vùng nhớ đã cấp phát cũng là do người lập trình.
+- Các hai vùng nhớ để có thể xảy ra hiện tượng memory leak nếu lập trình không cẩn thận:
+    - Nếu tạo ra số lượng biến có kích thước lớn hơn bộ nhớ của stack ví dụ như quá nhiều cục bộ trong hàm, gọi hàm đệ quy vô hạn,… sẽ dẫn tới tràn bộ nhớ stack (stack overflow).
+    - Nếu cấp phát vùng nhớ lớn hơn kích thước của heap thì việc khởi tạo vùng nhớ đó sẽ không thành công. Hoặc cấp phát liên tục mà không giải phóng vùng nhớ trên heap cũng sẽ bị tràn bộ nhớ heap (heap overflow).
+- Stack và Heap lưu dữ liệu theo hướng đối ngược nhau. Stack lưu dữ liệu vào địa chỉ giảm dần, còn Heap thì ngược lại.
+
+## malloc và calloc
+
+malloc và calloc đề cấp phát một vùng nhớ trên heap.
+
+Tuy nhiên có khác biệt:
+
+- malloc:
+    - Sẽ cấp phát một vùng nhớ mà không khởi tạo giá trị cho các ô nhớ đó. Tức là giá trị của vùng nhớ đó vẫn sẽ giữ nguyên như trước khi cấp phát vùng nhớ. Các giá trị ngẫu nhiên này gọi là garbage values.
+    - malloc chỉ cần một tham số truyền vào là số byte bộ nhớ sẽ cấp phát.
+        
+        ```c
+         char *line = (char *)malloc(20 * sizeof(char));
+        ```
+        
+- calloc:
+    - Sẽ cấp phát một vùng nhớ và khởi tạo giá trị 0 cho các ô nhớ.
+    - calloc có hai giá trị truyền vào là số phần tử cần cấp phát và kích thước (số byte) của mỗi phần tử.
+        
+        ```c
+         char *line = (char *)calloc(20, sizeof(char));
+        ```
+
+</details>
