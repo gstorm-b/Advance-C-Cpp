@@ -1237,7 +1237,7 @@ int main(void) {
 <summary>nội dung</summary>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/859fe813-2556-472e-a67f-1a86291fc8d7" width="50%">
+  <img src="https://github.com/user-attachments/assets/859fe813-2556-472e-a67f-1a86291fc8d7" width="30%">
 </p>
 
 ## Memory layout
