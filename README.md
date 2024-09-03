@@ -1391,3 +1391,6 @@ Tuy nhiên có khác biệt:
         ```
 
 </details>
+
+
+![layout_memory](https://github.com/user-attachments/assets/859fe813-2556-472e-a67f-1a86291fc8d7)
