@@ -1,0 +1,11 @@
+{
+    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+    "files.associations": {
+        "stdio.h": "c",
+        "sum.h": "c",
+        "time.h": "c",
+        "linkedlist.h": "c",
+        "stdint.h": "c",
+        "type_traits": "c"
+    }
+}
