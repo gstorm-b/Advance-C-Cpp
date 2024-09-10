@@ -1408,7 +1408,9 @@ Tuy nhiên có khác biệt:
 
 **Các node không nhất thiết phải có địa chỉ liền kề nhau trong bộ nhớ mà có thể lưu trữ rải rác trong bộ nhớ. (Khác với array được cấp phát nhiều ô nhớ nằm kế nhau trong bộ nhớ)**
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/3b0ca9a8-3746-4fc1-a321-681efa6f7f3b/image.png)
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/be5d7202-74fe-4b8a-8ad8-61199bcf4d45" width="80%">
+</p>
 
 Các dạng linked list:
 
@@ -1437,9 +1439,11 @@ Các function quan trọng của linked list:
     ```
     
 - Insert: chèn một node vào một vị trí bất kì trong list.
-    
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/1a5de61c-2190-4fee-b274-a7edb491dce4/image.png)
-    
+
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/e1cafa06-8040-4bcf-82c9-3bd2fae6add8" width="100%">
+    </p>
+
     - Duyệt list đến trước vị trí cần chèn (index-1)
         
         => Tạo node mới và set pointer trỏ đến node tại vị trí cần chèn.
@@ -1538,6 +1542,4 @@ Các function quan trọng của linked list:
 - empty: cho biết node có rỗng hay không.
 </details>
 
-![image](https://github.com/user-attachments/assets/be5d7202-74fe-4b8a-8ad8-61199bcf4d45)
-![image](https://github.com/user-attachments/assets/e1cafa06-8040-4bcf-82c9-3bd2fae6add8)
 
