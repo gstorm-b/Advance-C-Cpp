@@ -1393,3 +1393,147 @@ Tuy nhiên có khác biệt:
 
 </details>
 
+
+# 9. Linked list
+
+<details> 
+
+<summary>nội dung</summary>
+
+Linked list là một cấu trúc dữ liệu giúp quản lí dữ liệu và lưu trữ dự liệu trong bộ nhớ.
+
+Linked list gồm nhiều node. Mỗi node sẽ gồm giá trị được lưu trữ và địa chỉ của node tiếp theo.
+
+Node cuối cùng sẽ luôn trỏ đến địa chỉ `NULL`.
+
+Các node không nhất thiết phải có địa chỉ liền kề nhau trong bộ nhớ mà có thể lưu trữ rải rác trong bộ nhớ. (Khác với array được cấp phát nhiều ô nhớ nằm kế nhau trong bộ nhớ)
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/3b0ca9a8-3746-4fc1-a321-681efa6f7f3b/image.png)
+
+Các dạng linked list:
+
+- Singly linked list.
+    - Mỗi node chỉ chứa một con trỏ đến địa chỉ của node kế tiếp.
+    - Duyệt list theo một chiều từ node đầu tiên đến node cuối cùng.
+- Doubly linked list.
+    - Mỗi node có hai con trỏ, một trỏ đến node trước đó và một trỏ đến node tiếp theo.
+    - Có thể duyệt list theo hai chiều.
+- Circular linked list.
+    - Tương tự như singly linked list nhưng node cuối cùng trỏ về địa chỉ của node đầu tiên thay vì `NULL`.
+
+Các function quan trọng của linked list:
+
+- create node: tạo một node mới (cấp phát vùng nhớ cho một node mới).
+    - Cấp phát vùng nhớ cho node mới.
+    - Trả về địa chỉ của vùng nhớ vừa được cấp phát.
+    
+    ```c
+    Node_t *createNode(int data) {
+        Node_t *node = (Node_t *)malloc(sizeof(Node_t));
+        node->value = data;
+        node->next = NULL;
+        return node;
+    }
+    ```
+    
+- Insert: chèn một node vào một vị trí bất kì trong list.
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/1a5de61c-2190-4fee-b274-a7edb491dce4/image.png)
+    
+    - Duyệt list đến trước vị trí cần chèn (index-1)
+        
+        => Tạo node mới và set pointer trỏ đến node tại vị trí cần chèn.
+        	=> Set next pointer của node hiện tại trỏ đến node vừa tạo.
+        
+    - Trường hợp chèn tại vị trí 0:
+        
+        => Tạo node mới, set next pointer trỏ đến node đầu tiên của list (node tại vị trí 0)
+        
+        => Set con trỏ của node header trỏ đến node vừa tạo
+        
+    
+    ```c
+    
+    /* Giải thích _insertNodeBefore: tạo node mới và chèn vào trước vị trí của node truyền vào.
+    Tạo node mới là new_node, 
+    Gán giá trị cho next pointer của new_node là giá trị của con trỏ node.
+    Thay giá trị của con trỏ node là đại chỉ của new_node vừa cấp phát.
+    */
+    
+    static void _insertNodeBefore(Node_t **node, int data) {
+        Node_t *new_node = createNode(data);
+        new_node->next = *node;
+        *node = new_node;
+    }
+    
+    void insertAt(Node_t **node, int _value, int index) {
+        _DEBUG_LOG((node != NULL), "insertAt() err, Input node invalid");
+    
+        Node_t *temp = *node;
+        if (index == 0) {
+            _insertNodeBefore(node, _value);
+            return;
+        }
+    
+        int count = 1;
+        while (count++ != index) {
+            if (temp->next == NULL) {
+                // index out range
+                _DEBUG_LOG(0, "insertAt() err, Index out of range.");
+                return;
+            }
+            _SET_NEXT_NODE(temp);
+        }
+    
+        _insertNodeBefore(&(temp->next), _value);
+    }
+    ```
+    
+
+- delete (remove): xóa một node bất kì trong list.
+    - Duyệt list đến node phía trước vị trí cần xóa (node thứ index-1)
+    	=> Set next pointer của node đó đến node phía sau trị trí cần xóa.
+    		=> Giải phóng vùng nhớ của node cần xóa.
+    Trường hợp xóa node vị trí đầu tiên:
+    	=> Set con trỏ node đến node kế tiếp.
+    		=> Giải phóng vùng nhớ của node đầu tiên.
+    
+    ```c
+    void deleteAt(Node_t **node, int index) {
+        _DEBUG_LOG((node != NULL), "deleteAt() err, Input node invalid");
+        
+        Node_t *temp = *node;
+        if (index == 0) {
+            *node = temp->next;
+            free(temp);
+            return;
+        }
+    
+        int count = 1;
+        while (count++ != index) {
+            _SET_NEXT_NODE(temp);
+            if (temp->next == NULL) {
+                // index out of range
+                _DEBUG_LOG(0, "deleteAt() err, Index out of range.");
+                // return;
+            }
+        }
+        Node_t *delete_node = temp->next;
+        temp->next = delete_node->next;
+        free(delete_node);
+    }
+    ```
+    
+- push: đẩy một node vào list.
+    - push front: chèn vào đầu list.
+    - push back: chèn vào cuối list.
+- pop: lấy ra (xóa khỏi) list.
+    - pop front: gỡ vị trí đầu tiên.
+    - pop back: gỡ vị trí cuối cùng.
+- get: lấy giá trị của node.
+    - get front: lấy giá trị của node đầu tiên.
+    - get back: lấy giá trị của node cụ thể.
+    - get at: lấy giá trị của một node với index cụ thể.
+- get size: lấy số lượng node của list.
+- empty: cho biết node có rỗng hay không.
+</details>

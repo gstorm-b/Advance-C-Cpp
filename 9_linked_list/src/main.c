@@ -19,76 +19,39 @@ void printList(Node_t *list) {
 
 int main(void) {
 
-    Node_t *linkNode = NULL;
-    printf("Is list empty: %s\n", isEmpty(linkNode) ? "True" : "False");
+    Node_t *numbers = NULL;
 
-    pushBack(&linkNode, 3);
-    printList(linkNode);
-    
-    popFront(&linkNode);
-    printList(linkNode);
+    printf("Is list empty: %s\n", isEmpty(numbers) ? "True" : "False");
 
-    pushBack(&linkNode, 5);
-    pushBack(&linkNode, 7);
+    pushBack(&numbers, 10);
+    pushBack(&numbers, 20);
+    pushBack(&numbers, 30);
+    printList(numbers);
 
-    // printList(linkNode);
-    // printf("Value at front: %d\n", getFront(linkNode));
-    // printf("Value at back: %d\n", getBack(linkNode));
+    // popFront(&numbers);
+    // printList(numbers);
+    // popBack(&numbers);
+    // popBack(&numbers);
+    // printList(numbers);
 
-    // pushFront(&linkNode, 1);
-    // pushBack(&linkNode, 12);
-    // printList(linkNode);
-    // printf("Value at front: %d\n", getFront(linkNode));
+    printf("Value at front of list: %d\n", getFront(numbers));
+    printf("Value at back of list: %d\n", getBack(numbers));
+    printf("Value at %d: %d\n", 1, getAt(numbers, 1));
 
-    // insertAt(&linkNode, 27, 0);
-    // printList(linkNode);
-    // insertAt(&linkNode, 13, 3);
-    // printList(linkNode);
-    // insertAt(&linkNode, 100, 13);
-    // printList(linkNode);
-    // insertAt(&linkNode, 100, 1);
-    // printList(linkNode);
+    insertAt(&numbers, 27, 0);
+    insertAt(&numbers, 28, 1);
+    insertAt(&numbers, 29, 3);
+    insertAt(&numbers, 35, 6);
+    printList(numbers);
 
-    // popBack(&linkNode);
-    // printList(linkNode);
+    deleteAt(&numbers, 0);
+    deleteAt(&numbers, 2);
+    printList(numbers);
 
-    // popFront(&linkNode);
-    // printList(linkNode);
-
-    // insertAt(&linkNode, 100, 1);
-    // printList(linkNode);
-
-    // insertAt(&linkNode, 101, 0);
-    // printList(linkNode);
-
-    printf("Value at %d = %d.\n", 1, getAt(linkNode, 1));
-    printf("Value at %d = %d.\n", 2, getAt(linkNode, 2));
-    printf("Value at %d = %d.\n", 4, getAt(linkNode, 6));
-
-    deleteAt(&linkNode, 0);
-    printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    deleteAt(&linkNode, 3);
-    printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    deleteAt(&linkNode, 5);
-    printList(linkNode);
-
-    // deleteAt(&linkNode, 1);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    // popFront(&linkNode);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    // deleteAt(&linkNode, 0);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    printf("Is list empty: %s\n", isEmpty(linkNode) ? "True" : "False");
+    printf("Is list empty: %s\n", isEmpty(numbers) ? "True" : "False");
+    printf("Size of Number list: %d", getSize(numbers));
+    clearList(&numbers);
+    // printf("Is list empty: %s\n", isEmpty(numbers) ? "True" : "False");
 
     return 0;
 }
