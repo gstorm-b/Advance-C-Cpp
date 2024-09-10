@@ -1400,13 +1400,13 @@ Tuy nhiên có khác biệt:
 
 <summary>nội dung</summary>
 
-Linked list là một cấu trúc dữ liệu giúp quản lí dữ liệu và lưu trữ dự liệu trong bộ nhớ.
+**Linked list là một cấu trúc dữ liệu giúp quản lí dữ liệu và lưu trữ dự liệu trong bộ nhớ.**
 
-Linked list gồm nhiều node. Mỗi node sẽ gồm giá trị được lưu trữ và địa chỉ của node tiếp theo.
+**Linked list gồm nhiều node. Mỗi node sẽ gồm giá trị được lưu trữ và địa chỉ của node tiếp theo.**
 
-Node cuối cùng sẽ luôn trỏ đến địa chỉ `NULL`.
+**Node cuối cùng sẽ luôn trỏ đến địa chỉ `NULL`.**
 
-Các node không nhất thiết phải có địa chỉ liền kề nhau trong bộ nhớ mà có thể lưu trữ rải rác trong bộ nhớ. (Khác với array được cấp phát nhiều ô nhớ nằm kế nhau trong bộ nhớ)
+**Các node không nhất thiết phải có địa chỉ liền kề nhau trong bộ nhớ mà có thể lưu trữ rải rác trong bộ nhớ. (Khác với array được cấp phát nhiều ô nhớ nằm kế nhau trong bộ nhớ)**
 
 ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/3b0ca9a8-3746-4fc1-a321-681efa6f7f3b/image.png)
 
