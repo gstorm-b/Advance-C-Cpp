@@ -1537,3 +1537,7 @@ Các function quan trọng của linked list:
 - get size: lấy số lượng node của list.
 - empty: cho biết node có rỗng hay không.
 </details>
+
+![image](https://github.com/user-attachments/assets/be5d7202-74fe-4b8a-8ad8-61199bcf4d45)
+![image](https://github.com/user-attachments/assets/e1cafa06-8040-4bcf-82c9-3bd2fae6add8)
+
