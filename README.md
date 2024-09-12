@@ -1753,3 +1753,9 @@ Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
     }
     ```
 </details>
+
+![image](https://github.com/user-attachments/assets/20fd07c3-6650-4820-bdb0-8cd3238cac41)
+![image](https://github.com/user-attachments/assets/0832190f-b5ed-4a7e-8c75-5471968cadda)
+![image](https://github.com/user-attachments/assets/0bc2a2ab-41f8-469a-9d10-5ec86c126b85)
+
+
