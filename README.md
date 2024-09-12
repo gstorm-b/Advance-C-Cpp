@@ -1542,4 +1542,214 @@ Các function quan trọng của linked list:
 - empty: cho biết node có rỗng hay không.
 </details>
 
+# 10. Stack - Queue
 
+<details>
+<summary>nội dung</summary>
+
+## Stack
+
+**Stack là cấu trúc dữ liệu được dùng để lưu trữ dữ liệu, hoạt động theo nguyên tắc Last In First Out (LIFO).**
+
+**Last in first out: nghĩa là phần cuối cùng được thêm vào sẽ được lấy ra đầu tiên.**
+
+Các thao tác cơ bản của Stack gồm:
+
+- Push: thêm một phần tử mới vào phía cuối stack.
+- Pop: xóa phần tử cuối cùng của stack và trả về giá trị của phần tử đó.
+- Top: trả về giá trị phần tử cuối cùng được thêm vào stack.
+
+Thực hiện Pop đối với một stack trống gọi là underflow.
+
+Thực hiện Push đối với một stack đầy gọi là overflow.
+
+### Implement Stack:
+
+- Khởi tạo Stack:
+    - Cấp phát bộ nhớ để lưu trữ cho stack.
+    - Index top luôn chỉ tới vị trí phần tử cuối cùng của stack, nếu stack rỗng giá trị của top là -1.
+    
+    ```c
+    void stackInitialize(Stack_t *stack, int size) {
+        stack->items = (Stack_Data_Type *)malloc(sizeof(Stack_Data_Type) * size);
+        stack->size = size;
+        stack->top = -1;
+    }
+    ```
+    
+- Push:
+    - Tăng index top lên 1 và gián giá trị tại vị trí index top.
+    
+    ```c
+    void stackPush(Stack_t *stack, Stack_Data_Type data) {
+        if (!stackIsFull(stack)) {
+            stack->items[++(stack->top)] = data; 
+        } else {
+            PRINT_MSG_LN("Stack is overflow!");
+        }
+    }
+    ```
+    
+- Pop:
+    - Lấy ra giá trị tại index top sau đó giảm top 1 đơn vị.
+    
+    ```c
+    Stack_Data_Type stackPop(Stack_t *stack) {
+        if (!stackIsEmpty(stack)) {
+            return stack->items[(stack->top)--]; 
+        } else {
+            PRINT_MSG_LN("Stack is underflow!");
+            return -1;
+        }
+    }
+    ```
+    
+- Top:
+    
+    ```c
+    Stack_Data_Type stackTop(Stack_t *stack) {
+        if (!stackIsEmpty(stack)) {
+            return stack->items[stack->top];
+        } else {
+            PRINT_MSG_LN("Stack is empty!");
+            return -1;
+        }
+    }
+    ```
+    
+- Empty:
+    
+    ```c
+    int stackIsEmpty(Stack_t const *stack){
+        return (stack->top == -1);
+    }
+    ```
+    
+- Full:
+    
+    ```c
+    int stackIsFull(Stack_t const *stack) {
+        return (stack->top == (stack->size - 1));
+    }
+    ```
+    
+
+## Queue
+
+**Queue là cấu trúc dữ liệu được dùng để lưu trữ dữ liệu, hoạt động theo nguyên tác First In First Out (FIFO).**
+
+**First In First Out: nghĩa là phần tử nào được thêm vào trước sẽ được lấy ra trước.**
+
+Các thao tác cơ bản của Queue:
+
+- Enqueue: thêm một phần tử mới vào cuối queue.
+- Dequeue: xóa phần tử ở vị trí đầu tiên ra khỏi queue và trả về giá trị của phần tử đó.
+- Front: trả về giá trị của phần tử đầu tiên trong queue.
+
+Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
+
+- Front: Chỉ vị trí phần tử đứng đầu queue.
+- Rear: Chỉ vị trí phần tử đứng cuối queue.
+- Các dạng Queue:
+    - Linear queue: Khi rear đi đến vị trí = `(size - 1)` sẽ không thể thêm một phần tử nào vào queue nữa mặc dù vẫn còn chỗ trống trong array → **gây lãng phí bộ nhớ**.
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/7b579cd7-a333-4225-8581-c04fe9f926a5/image.png)
+        
+    - Circular queue: Khi rear đi đến vị trí = `(size - 1)`, nếu trước front vẫn còn vị trí trống rear sẽ bắt đầu lại từ vị trí 0 cho đến khi queue đầy.
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/c6f425ad-9820-40dd-a75a-3562ce1e45d5/image.png)
+        
+
+### Implement Circular Queue:
+
+- Khởi tạo queue:
+    - Cấp phát vùng nhớ để lưu trữ giá trị trong queue.
+    - Khởi tạo index front và rear với giá trị -1 (queue rỗng).
+    
+    ```c
+    void queueInitialize(Queue_t *queue, int size) {
+        queue->items = (Queue_Data_Type *)malloc(sizeof(Queue_Data_Type)*size);
+        queue->size = size;
+        queue->front = -1;
+        queue->rear = -1;
+    }
+    ```
+    
+- Xác định queue rỗng khi giá trị của front = rear = -1.
+    
+    ```c
+    int queueIsEmpty(Queue_t const *queue) {
+        return (queue->front == -1);
+    }
+    ```
+    
+- Xác định queue đầy: khi rear đứng ngay sau front theo chiều xoay vòng dữ liệu của circular queue.
+    
+    ⇒ điều kiện: `((rear + 1) % size) == front`
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/7cad050c-c178-45a9-8f32-38e2c2334919/image.png)
+    
+    Với giới hạn size được khởi tạo, phép `%` sẽ có kết quả là index tính từ vị trí 0.
+    
+    ```c
+    int queueIsFull(Queue_t const *queue) {
+        return (((queue->rear + 1) % queue->size) == queue->front);
+    }
+    ```
+    
+- Enqueue:
+    - Kiểm tra xem queue đã đầy hay chưa, xử lí overflow và kết thúc hàm nếu đã đầy.
+    - Trường hợp queue đang trống: gán front và rear = 0 (queue có phần tử đầu tiên và duy nhất).
+    - Trường hợp queue có nhiều hơn 1 phần tử: tăng rear lên 1, phép `%`  sẽ có kết quả là 0 khi rear đang ở vị trí `size - 1`.
+    - Cuối cùng là gán giá trị mới tại vị trí index rear.
+    
+    ```c
+    void enqueue(Queue_t *queue, Queue_Data_Type data) {
+        if (!queueIsFull(queue)) {
+            if (queueIsEmpty(queue)) {
+                queue->front = queue->rear = 0;
+            } else {
+                queue->rear = (queue->rear + 1) % queue->size;
+            }
+            queue->items[queue->rear] = data;
+        } else {
+            PRINT_MSG_LN("Queue overflow!");
+        }
+    }
+    ```
+    
+- Dequeue:
+    - Kiểm tra xem queue có rỗng hay không, xử lí underflow và kế thúc hàm nếu queue rỗng.
+    - Lấy ra giá trị tại vị trí index front (giá trị của phần tử cuối cùng).
+    - Kiểm tra xem đây là có phải là phần tử duy nhất trong queue hay không, chuyển queue về trạng thái rỗng (front = rear = -1) nếu có. Nếu không tăng front lên 1,  phép `%`  sẽ có kết quả là 0 khi front đang ở vị trí `size - 1`.
+    
+    ```c
+    Queue_Data_Type dequeue(Queue_t *queue) {
+        if (!queueIsEmpty(queue)) {
+            int dequeued_value = queue->items[queue->front];
+            if (queue->front == queue->rear) {
+                queue->front = queue->rear = -1;
+            } else {
+                queue->front = (queue->front + 1) % queue->size;
+            }
+            return dequeued_value;
+        } else {
+            PRINT_MSG_LN("Queue underflow!");
+            return -1;
+        }
+    }
+    ```
+    
+- Front: trả về phần tử đứng đầu queue.
+    
+    ```c
+    Queue_Data_Type queueFront(Queue_t *queue) {
+        if (!queueIsEmpty(queue)) {
+            return queue->items[queue->front];
+        } else {
+            PRINT_MSG_LN("Queue is empty.");
+            return -1;
+        }
+    }
+    ```
+</details>

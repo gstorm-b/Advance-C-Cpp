@@ -1,94 +1,52 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "linkedlist.h"
+// #include "stack.h"
+#include "queue.h"
 
-void printList(Node_t *list) {
-    if (isEmpty(list)) {
-        printf("List empty.\n");
-        return;
-    }
-    
-    printf("List: %d", list->value);
-    list = list->next;
-    while (list!=NULL) {
-        printf(" - %d", list->value);
-        list = list->next;
-    }
-    printf(".\n");
-}
+// const int stack_size = 5;
+const int queue_size = 4;
 
 int main(void) {
 
-    Node_t *linkNode = NULL;
-    printf("Is list empty: %s\n", isEmpty(linkNode) ? "True" : "False");
+    Queue_t queue;
+    queueInitialize(&queue, queue_size);
 
-    pushBack(&linkNode, 3);
-    printList(linkNode);
+    enqueue(&queue, 10);
+    enqueue(&queue, 20);
+    enqueue(&queue, 30);
+    enqueue(&queue, 40);
+
+    printf("%d\n", dequeue(&queue));
+    printf("%d\n", dequeue(&queue));
     
-    // popFront(&linkNode);
-    // printList(linkNode);
+    enqueue(&queue, 50);
+    enqueue(&queue, 60);
 
-    pushBack(&linkNode, 5);
-    pushBack(&linkNode, 7);
+    printf("%d\n", dequeue(&queue));
+    printf("%d\n", dequeue(&queue));
 
-    // printList(linkNode);
-    // printf("Value at front: %d\n", getFront(linkNode));
-    // printf("Value at back: %d\n", getBack(linkNode));
 
-    pushFront(&linkNode, 1);
-    pushBack(&linkNode, 12);
-    printList(linkNode);
-    // printf("Value at front: %d\n", getFront(linkNode));
 
-    insertAt(&linkNode, 27, 0);
-    printList(linkNode);
-    insertAt(&linkNode, 13, 3);
-    printList(linkNode);
-    // insertAt(&linkNode, 100, 13);
-    // printList(linkNode);
-    insertAt(&linkNode, 100, 1);
-    printList(linkNode);
+    // Stack_t numbers;
+    // stackInitialize(&numbers, stack_size);
 
-    // popBack(&linkNode);
-    // printList(linkNode);
+    // stackPush(&numbers, 10);
+    // stackPush(&numbers, 20);
+    // stackPush(&numbers, 30);
+    // stackPush(&numbers, 40);
+    // stackPush(&numbers, 50);
+    // stackPush(&numbers, 60);
 
-    // popFront(&linkNode);
-    // printList(linkNode);
+    // printf("%d\n", stackPop(&numbers));
+    // printf("%d\n", stackPop(&numbers));
+    
+    // stackPush(&numbers, 70);
 
-    // insertAt(&linkNode, 100, 1);
-    // printList(linkNode);
-
-    // insertAt(&linkNode, 101, 0);
-    // printList(linkNode);
-
-    printf("Value at %d = %d.\n", 1, getAt(linkNode, 1));
-    printf("Value at %d = %d.\n", 2, getAt(linkNode, 2));
-    printf("Value at %d = %d.\n", 6, getAt(linkNode, 6));
-
-    deleteAt(&linkNode, 0);
-    printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    deleteAt(&linkNode, 3);
-    printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    deleteAt(&linkNode, 5);
-    printList(linkNode);
-
-    // deleteAt(&linkNode, 1);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    // popFront(&linkNode);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    // deleteAt(&linkNode, 0);
-    // printList(linkNode);
-    // printf("List size: %d.\n", getSize(linkNode));
-
-    printf("Is list empty: %s\n", isEmpty(linkNode) ? "True" : "False");
+    // printf("%d\n", stackPop(&numbers));
+    // printf("%d\n", stackPop(&numbers));
+    // printf("%d\n", stackPop(&numbers));
+    // printf("%d\n", stackPop(&numbers));
+    // printf("%d\n", stackPop(&numbers));
 
     return 0;
 }

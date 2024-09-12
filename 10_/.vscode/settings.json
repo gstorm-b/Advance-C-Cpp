@@ -6,6 +6,9 @@
         "time.h": "c",
         "linkedlist.h": "c",
         "stdint.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "stack.h": "c",
+        "queue.h": "c",
+        "stdlib.h": "c"
     }
 }
