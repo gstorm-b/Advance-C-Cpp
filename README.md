@@ -1636,7 +1636,7 @@ Thực hiện Push đối với một stack đầy gọi là overflow.
 
 ## Queue
 
-**Queue là cấu trúc dữ liệu được dùng để lưu trữ dữ liệu, hoạt động theo nguyên tác First In First Out (FIFO).**
+**Queue là cấu trúc dữ liệu được dùng để lưu trữ dữ liệu, hoạt động theo nguyên tắc First In First Out (FIFO).**
 
 **First In First Out: nghĩa là phần tử nào được thêm vào trước sẽ được lấy ra trước.**
 
