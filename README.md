@@ -1652,13 +1652,13 @@ Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
 - Rear: Chỉ vị trí phần tử đứng cuối queue.
 - Các dạng Queue:
     - Linear queue: Khi rear đi đến vị trí = `(size - 1)` sẽ không thể thêm một phần tử nào vào queue nữa mặc dù vẫn còn chỗ trống trong array → **gây lãng phí bộ nhớ**.
-        
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/7b579cd7-a333-4225-8581-c04fe9f926a5/image.png)
-        
+        <p align="center">
+        <img src="https://github.com/user-attachments/assets/20fd07c3-6650-4820-bdb0-8cd3238cac41" width="60%">
+        </p>
     - Circular queue: Khi rear đi đến vị trí = `(size - 1)`, nếu trước front vẫn còn vị trí trống rear sẽ bắt đầu lại từ vị trí 0 cho đến khi queue đầy.
-        
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/c6f425ad-9820-40dd-a75a-3562ce1e45d5/image.png)
-        
+        <p align="center">
+        <img src="https://github.com/user-attachments/assets/0832190f-b5ed-4a7e-8c75-5471968cadda" width="60%">
+        </p>
 
 ### Implement Circular Queue:
 
@@ -1686,11 +1686,11 @@ Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
 - Xác định queue đầy: khi rear đứng ngay sau front theo chiều xoay vòng dữ liệu của circular queue.
     
     ⇒ điều kiện: `((rear + 1) % size) == front`
-    
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/7cad050c-c178-45a9-8f32-38e2c2334919/image.png)
-    
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/0bc2a2ab-41f8-469a-9d10-5ec86c126b85" width="80%">
+    </p>
     Với giới hạn size được khởi tạo, phép `%` sẽ có kết quả là index tính từ vị trí 0.
-    
+
     ```c
     int queueIsFull(Queue_t const *queue) {
         return (((queue->rear + 1) % queue->size) == queue->front);
@@ -1753,9 +1753,3 @@ Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
     }
     ```
 </details>
-
-![image](https://github.com/user-attachments/assets/20fd07c3-6650-4820-bdb0-8cd3238cac41)
-![image](https://github.com/user-attachments/assets/0832190f-b5ed-4a7e-8c75-5471968cadda)
-![image](https://github.com/user-attachments/assets/0bc2a2ab-41f8-469a-9d10-5ec86c126b85)
-
-
