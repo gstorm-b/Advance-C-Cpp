@@ -1753,3 +1753,374 @@ Queue xác định vị trí dữ liệu trong array nhờ vào 2 index:
     }
     ```
 </details>
+
+
+# 11. Json
+
+<details> 
+<summary>nội dung</summary>
+
+
+**JSON stands for “Javascript Objet Notation”. Là một format được dùng phổ biến cho việc truyền tải, trao đổi dữ liệu giữa các máy với nhau. Ngoài ra một số trường hợp nó cũng được dùng để lưu trữ dữ liệu.**
+
+## Cú pháp Json:
+
+Object sẽ nằm trong cặp dấu `{ }` . Mỗi object là tập hợp của các cặp key - value. Các cặp key-value sẽ cách nhau bởi dấu `:` .
+
+Key sẽ luôn có kiểu dữ liệu là string.
+
+Value có thể là các kiểu sau:
+
+- Null
+- Boolean
+- Number
+- String
+- Array
+    - Những giá trị của Array sẽ nằm trong dấu `[ ]` .
+- Object
+
+Ví dụ: 
+
+```json
+// Trong object có nhiều cặp key-value.
+// value cũng có thể là object giống như value của address.
+// value cũng có thể là array giống như value của như hobbies.
+{
+    "name": "John",
+    "age": 30,
+    "isStudent": false,
+    "address": {
+        "city": "New York",
+        "zipcode": "10001"
+    },
+    "hobbies": ["reading", "coding", "hiking"]
+}
+```
+
+## Thực hiện phân tách chuỗi JSON:
+
+### Định nghĩa kiểu dữ liệu
+
+Để định nghĩa kiểu dữ liệu cho value của JSON cần có sự kết hợp của union và struct.
+
+JsonValue:
+
+- Type là một enum biểu diễn kiểu dữ liệu của value đó.
+- Value là biến chứa giá trị của JsonValue. Vì không biết trước value sẽ có kiểu giá trị gì nên buộc phải dùng union để sử dụng vùng nhớ lưu giá trị với nhiều kiểu dữ liệu khác nhau.
+
+```c
+typedef enum {
+    JSON_NULL,
+    JSON_BOOLEAN,
+    JSON_NUMBER,
+    JSON_STRING,
+    JSON_ARRAY,
+    JSON_OBJECT
+} JsonType;
+
+typedef struct JsonValue {
+    JsonType type;
+    union {
+        int boolean;
+        double number;
+        char *string;
+        struct {
+            struct JsonValue *values;
+            size_t count;
+        } array;
+        struct {
+            char **keys;
+            struct JsonValue *values;
+            size_t count;
+        } object;
+    } value;
+} JsonValue;
+```
+
+### ParseJson
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/83a0e4a9-a1e3-423c-b8d3-0b8f02dd39ec/image.png)
+
+Ta sẽ kiểm tra những kí tự bắt đầu (bỏ qua khoảng trắng) để xem đó là kiểu dữ liệu nào. Sau đó thực hiện phân tích giá trị từ chuỗi kí tự phù hợp với từng kiểu dữ liệu.
+
+```c
+JsonValue *parseJson(const char **json_ptr) {
+    skip_whitspace(json_ptr);
+
+    switch (**json_ptr) {
+		    // null
+        case 'n':
+            return parseNull(json_ptr);
+        // true or false
+        case 't':
+        case 'f':
+            return parseBool(json_ptr);
+        // " là kí tự bắt đầu của kiểu string.
+        case '\"':
+            return parseString(json_ptr);
+        // [ là kí tự bắt đầu của kiểu array.
+        case '[':
+            return parseArray(json_ptr);
+        // { là kí tự bắt đầu của kiểu object.
+        case '{':
+            return parseObject(json_ptr);
+        // trường hợp còn lại sẽ là số và cả trường hợp số âm
+        default:
+            if (isdigit(**json_ptr) || **json_ptr == '-') {
+                return parseNumber(json_ptr);
+            } else {
+                // parse error handle
+                return NULL;
+            }
+            break;
+    }
+}
+```
+
+### ParseString
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9929a2b7-890c-4fb7-9516-66279ac9abe5/image.png)
+
+```c
+JsonValue *parseString(const char **json_ptr) {
+    skip_whitspace(json_ptr);
+	
+		// tìm kí tự mở đầu của một chuỗi
+    if (**json_ptr == '\"') {
+        (*json_ptr)++;
+        // lưu lại vị trí bắt đầu và tiếp tục tìm đến kí tự kết thúc chuỗi
+        const char *starting_str_address = *json_ptr;
+        while ((**json_ptr != '\"') && (**json_ptr != '\0')) {
+            (*json_ptr)++;
+        }
+				// khi gặp kí tự kết thúc chuỗi ta sẽ cấp phát một vùng nhớ mới và copy chuỗi từ vị trí đã lưu
+        if (**json_ptr == '\"') {
+            // allocate string memory
+            size_t string_size = *json_ptr - starting_str_address;
+            char *string_ptr =  (char *)malloc(sizeof(char)*(string_size + 1));
+            strncpy(string_ptr, starting_str_address, string_size);
+            // gán kí tự kết thúc chuỗi
+            string_ptr[string_size] = '\0';
+            // allocate new json value
+            JsonValue *value = (JsonValue *)malloc(sizeof(JsonValue));
+            value->type = JSON_STRING;
+            value->value.string = string_ptr;
+
+            (*json_ptr)++;
+            return value;
+        }
+    }
+    return NULL;
+}
+```
+
+### ParseNumber
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/2e11e697-60d2-4653-8ffe-f4b78f1652d4/image.png)
+
+```c
+JsonValue *parseNumber(const char **json_ptr) {
+    char *end_parse = NULL;
+    skip_whitspace(json_ptr);
+    double number = strtod(*json_ptr, &end_parse);
+    if (*json_ptr != end_parse) {
+        JsonValue *value = (JsonValue *)malloc(sizeof(JsonValue));
+        value->type = JSON_NUMBER;
+        value->value.number = number;
+        *json_ptr = end_parse;
+        return value;
+    }
+    return NULL;
+}
+```
+
+`stdtod`  convert string to double, endptr sau khi thực thi sẽ có giá trị của address kết thúc string number.
+
+Ví dụ ta có chuỗi `char* str = "1234,E"` , sau khi thực hiện strtod con trỏ endptr sẽ chứa địa chỉ của kí tự `,` .
+
+### ParseBool
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/ff85ce26-63d7-4a1d-8bd5-056290346362/image.png)
+
+```c
+JsonValue *parseBool(const char **json_ptr) {
+    JsonValue *value = NULL;
+    skip_whitspace(json_ptr);
+
+    if (strncmp(*json_ptr, "true", 4) == 0) {
+        value = (JsonValue *)malloc(sizeof(JsonValue));
+        value->type = JSON_BOOLEAN;
+        value->value.boolean = true;
+        *json_ptr += 4;
+    } else if (strncmp(*json_ptr, "false", 5) == 0) {
+        value = (JsonValue *)malloc(sizeof(JsonValue));
+        value->type = JSON_BOOLEAN;
+        value->value.boolean = false;
+        *json_ptr += 5;
+    } else {
+        return NULL;
+    }
+    return value;
+}
+```
+
+Thực hiện so sánh chuỗi bắt đầu từ kí tự hiện tại mà `*json_ptr`  đang trỏ tới.
+
+`strncmp`  thực hiện so sánh hai chuỗi với số lượng kí tự xác định trước, trả về 0 nếu hai chuỗi bằng nhau.
+
+### ParseNull
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9e24f090-2a96-4e36-ae3b-6b596446fa8a/image.png)
+
+```c
+JsonValue *parseNull(const char **json_ptr) {
+    skip_whitspace(json_ptr);
+    if (strncmp(*json_ptr, "null", 4) == 0) {
+        JsonValue *value = (JsonValue *)malloc(sizeof(JsonValue));
+        value->type = JSON_NULL;
+        *json_ptr += 4;
+        return value;
+    }
+    return NULL;
+}
+```
+
+Tương tự như parse boolean, nhưng là so sánh với chuỗi “null”.
+
+### ParseArray
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/d82871ba-c842-4886-905f-67749e8c81a7/image.png)
+
+```c
+JsonValue *parseArray(const char **json_ptr) {
+    skip_whitspace(json_ptr);
+    if (**json_ptr == '[') {
+        (*json_ptr)++;
+        skip_whitspace(json_ptr);
+
+        JsonValue *array = (JsonValue *)malloc(sizeof(JsonValue));
+        array->type = JSON_ARRAY;
+        array->value.array.count = 0;
+        array->value.array.values = NULL;
+
+        while ((**json_ptr != ']') && (**json_ptr != '\0')) {
+            JsonValue *element = parseJson(json_ptr);
+
+            if (element != NULL) {
+                array->value.array.count += 1;
+                array->value.array.values = realloc(array->value.array.values, (sizeof(JsonValue) * array->value.array.count));
+                array->value.array.values[array->value.array.count - 1] = *element;
+                free(element);
+            } else {
+                break;
+            }
+
+            skip_whitspace(json_ptr);
+            if (**json_ptr == ',') {
+                (*json_ptr)++;
+            }
+        }
+
+        if (**json_ptr == ']') {
+            (*json_ptr)++;
+            return array;
+        } else {
+            freeJsonValue(array);
+            free(array);
+            return NULL;
+        }
+    }
+    return NULL;
+}
+```
+
+### ParseObject
+
+Flowchart:
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/2a3b9f34-665b-4083-913b-7120207e1e7a/image.png)
+
+```c
+JsonValue *parseObject(const char **json_ptr) {
+    skip_whitspace(json_ptr);
+
+		// tìm kí tự mở đầu của một object {
+    if (**json_ptr == '{') {
+        (*json_ptr)++;
+        skip_whitspace(json_ptr);
+				
+				// cấp phát vùng nhớ và khởi tạo một value mới với kiểu object
+        JsonValue *object = (JsonValue *)malloc(sizeof(JsonValue));
+        object->type = JSON_OBJECT;
+        object->value.object.count = 0;
+        object->value.object.keys = NULL;
+        object->value.object.values = NULL;
+
+        // phân tích chuỗi tìm từng cặp key-value 
+        // cho đến khi gặp kí tự kết thúc object hoặc giá trị 0x00.
+        while ((**json_ptr != '}') && (**json_ptr != '\0')) {
+		        // vì key luôn là string
+            JsonValue *key = parseString(json_ptr);
+						// kết thúc vòng lặp nếu phân tích key không thành công
+            if (key != NULL) {
+                skip_whitspace(json_ptr);
+								
+                if (**json_ptr == ':') {
+                    (*json_ptr)++;
+                    JsonValue *value = parseJson(json_ptr);
+                    
+                    if (value != NULL) {
+                        object->value.object.count++;
+                        // mở rộng vùng nhớ đã cấpp phát cho các cặp key và value.
+                        object->value.object.keys = realloc(object->value.object.keys, sizeof(JsonValue)*object->value.object.count);
+                        object->value.object.keys[object->value.object.count - 1] = key->value.string;
+                        // add value
+                        object->value.object.values = realloc(object->value.object.values, sizeof(JsonValue)*object->value.object.count);
+                        object->value.object.values[object->value.object.count - 1] = *value;
+                        
+                        free(value);
+                        free(key);
+
+                        skip_whitspace(json_ptr);
+                        if (**json_ptr == ',') {
+                            (*json_ptr)++;
+                        }
+                        continue;
+                    }
+                }
+                // lỗi cú pháp không tìm thấy value, giải phóng vùng dữ liệu đã cấp cho key
+                freeJsonValue(key);
+                free(key);
+                break;
+            } else {
+                break;
+            }
+        }
+        
+        // tìm kí tự kết thúc object '}', nếu không thấy thì là lỗi cú pháp
+        if (**json_ptr == '}') {
+            (*json_ptr)++;
+            return object;
+        } else {
+            freeJsonValue(object);
+            free(object);
+            return NULL;
+        }
+    }
+    return NULL;
+}
+```
+
+</details>
