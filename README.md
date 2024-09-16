@@ -1841,7 +1841,9 @@ typedef struct JsonValue {
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/83a0e4a9-a1e3-423c-b8d3-0b8f02dd39ec/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/1c643b79-a9f0-47dd-9971-fd43c19d2954" width="80%">
+</p>
 
 Ta sẽ kiểm tra những kí tự bắt đầu (bỏ qua khoảng trắng) để xem đó là kiểu dữ liệu nào. Sau đó thực hiện phân tích giá trị từ chuỗi kí tự phù hợp với từng kiểu dữ liệu.
 
@@ -1883,7 +1885,10 @@ JsonValue *parseJson(const char **json_ptr) {
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9929a2b7-890c-4fb7-9516-66279ac9abe5/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/3e064e7e-7976-4a0a-af54-af4fe6b06e01" width="80%">
+</p>
+
 
 ```c
 JsonValue *parseString(const char **json_ptr) {
@@ -1922,7 +1927,10 @@ JsonValue *parseString(const char **json_ptr) {
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/2e11e697-60d2-4653-8ffe-f4b78f1652d4/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/897557ac-eded-4bb7-a961-566574e2659f" width="80%">
+</p>
+
 
 ```c
 JsonValue *parseNumber(const char **json_ptr) {
@@ -1948,7 +1956,10 @@ Ví dụ ta có chuỗi `char* str = "1234,E"` , sau khi thực hiện strtod co
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/ff85ce26-63d7-4a1d-8bd5-056290346362/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/71dfd67a-7af8-4550-95f2-22aaec6f9e5e" width="80%">
+</p>
+
 
 ```c
 JsonValue *parseBool(const char **json_ptr) {
@@ -1980,7 +1991,10 @@ Thực hiện so sánh chuỗi bắt đầu từ kí tự hiện tại mà `*jso
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/9e24f090-2a96-4e36-ae3b-6b596446fa8a/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/6a1febf4-154d-4add-ba83-589eed9bee1a" width="80%">
+</p>
+
 
 ```c
 JsonValue *parseNull(const char **json_ptr) {
@@ -2001,7 +2015,10 @@ Tương tự như parse boolean, nhưng là so sánh với chuỗi “null”.
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/d82871ba-c842-4886-905f-67749e8c81a7/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/92cb58ee-d01e-40e4-afe3-a5e740cd3052" width="80%">
+</p>
+
 
 ```c
 JsonValue *parseArray(const char **json_ptr) {
@@ -2050,7 +2067,9 @@ JsonValue *parseArray(const char **json_ptr) {
 
 Flowchart:
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/2a3b9f34-665b-4083-913b-7120207e1e7a/image.png)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/8e4b0311-73b6-4d3b-ab32-60526ab0d144" width="80%">
+</p>
 
 ```c
 JsonValue *parseObject(const char **json_ptr) {
@@ -2124,22 +2143,3 @@ JsonValue *parseObject(const char **json_ptr) {
 ```
 
 </details>
-
-![image](https://github.com/user-attachments/assets/1c643b79-a9f0-47dd-9971-fd43c19d2954)
-![image](https://github.com/user-attachments/assets/8e4b0311-73b6-4d3b-ab32-60526ab0d144)
-![image](https://github.com/user-attachments/assets/3e064e7e-7976-4a0a-af54-af4fe6b06e01)
-![image](https://github.com/user-attachments/assets/897557ac-eded-4bb7-a961-566574e2659f)
-![image](https://github.com/user-attachments/assets/6a1febf4-154d-4add-ba83-589eed9bee1a)
-![image](https://github.com/user-attachments/assets/92cb58ee-d01e-40e4-afe3-a5e740cd3052)
-![image](https://github.com/user-attachments/assets/b7d53860-95ee-4f55-a656-9b7423047697)
-![image](https://github.com/user-attachments/assets/71dfd67a-7af8-4550-95f2-22aaec6f9e5e)
-
-<p align="center">
-<img src="https://github.com/user-attachments/assets/0bc2a2ab-41f8-469a-9d10-5ec86c126b85" width="80%">
-</p>
-
-
-
-
-
-
