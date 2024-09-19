@@ -2241,3 +2241,5 @@ printf("%s", buffer);
 [Các quy tắc về đặt tên theo tiêu chuẩn “Autosar C Coding Guidelines”](https://hala.edu.vn/c-co-ban/cac_quy_tac_ve_dat_ten_theo_tieu_chuan_autosar_c_coding_guidelines/)
 
 </details>
+
+![image](https://github.com/user-attachments/assets/2f15e74d-e3e5-483e-af15-fc79979adb17)
