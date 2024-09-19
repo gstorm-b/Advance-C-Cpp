@@ -2143,3 +2143,101 @@ JsonValue *parseObject(const char **json_ptr) {
 ```
 
 </details>
+
+# 12. Binary search - File operation - Code convention
+<details>
+<summary>nội dung</summary>
+
+
+## Binary search
+
+**Binary search là thuật toán tìm kiếm một phần tử trong array hoặc list, để thực hiện được binary search các phần tử trong mảng hoặc list phải được sắp xếp theo thứ tự từ bé đến lớn.**
+
+**Binary search sẽ thực hiện tìm kiếm liên tục bằng cách chia đôi phạm vi tìm kiếm và so sánh giá trị cần tim với giá trị ở giữa phạm vi cho đến khi tìm được vị trí hoặc đến khi không thể thu hẹp được nữa.**
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/12f85233-d251-4641-9068-58727ed3c3fb/3fff91ba-ff6f-4db9-8058-677925281ffc/image.png)
+
+### Thực hiện binary search
+
+- Sắp xếp array hoặc list.
+- Ban đầu index `left` và `right` là vị trí 0 và vị trí cuối cùng.
+- Tìm vị trí giữa: index `mid` được tính là giá trị ở giữa của index `left` và index `right` ⇒ `mid = (left + right) / 2`
+- So sánh giá trị tại index mix và giá trị cần tìm:
+    - Nếu giá trị tại mix lớn hơn thì giá trị cần tìm kiếm sẽ nằm trong khoảng nữa bên trái. Index `left` vẫn giữ nguyên và index `right` mới là `mid - 1`. Thực hiện tìm kiếm lần nữa với index mới.
+    - Nếu giá trị tại mix bé hơn thì giá trị cần tìm kiếm sẽ nằm trong khoảng nữa bên phải. Index `right` vẫn giữ nguyên và index `left` mới là `mid + 1`. Thực hiện tìm kiếm lần nữa với index mới.
+    - Nếu giá trị tại mix bằng giá trị cần tìm thì trả về vị trí của mix.
+- Nếu tìm kiếm cho đến khi `right < left`  tức là giá trị không tồn tại trong array hoặc list.
+
+Có thể dùng vòng lặp while hoặc đệ quy để thực hiện tìm kiếm.
+
+```c
+int binarySearch(int *number_list, int left, int right, int value) {
+    if (right >= left) {
+        int mid = (left + right) / 2;
+        if (number_list[mid] == value)  {
+            return mid;
+        }
+        if (number_list[mid] > value) {
+            return binarySearch(number_list, left, mid - 1, value);
+        }
+        return binarySearch(number_list, mid + 1, right, value);
+    }
+    return -1;
+}
+```
+
+### Bubble sort
+
+**Bubble sort là thuật toán sắp xếp cơ bản, sắp xếp bằng cách so sánh và thay đổi vị trí của hai phần tử liền kề nhau.**
+
+```c
+void swapNumber(int *number_1, int *number_2) {
+    int temp = *number_1;
+    *number_1 = *number_2;
+    *number_2 = temp;
+}
+
+/*
+Thực hiện so sánh bắt đầu từ phần tử cuối cùng,
+các phần tử nhỏ sẽ đần được đẩy lên vị trí phía trước
+*/
+void bubbleSort(int *number_list, int list_size) {
+    int index_1, index_2;
+    for (index_1=0;index_1<(list_size-2);index_1++) {
+        for (index_2=list_size-1;index_2>index_1;index_2--) {
+            if (number_list[index_2] < number_list[index_2-1]) {
+                swapNumber(&number_list[index_2], &number_list[index_2-1]);
+            }
+        }
+    }
+}
+
+```
+
+## File Operation
+
+**C có hỗ trợ một số hàm và thư viện tiêu chuẩn để thao tác với File như đọc, ghi, tạo file mới,…**
+
+**Có thể thao với với file dạng binary và text.**
+
+Ví dụ mở file và đọc dòng đầu tiên của file:
+
+```c
+const int max_buffer = 1000;
+char buffer[max_buffer];
+FILE *file = fopen("./hello.txt", "r");
+if (file == NULL) {
+    printf("The file is not opened. The program will "
+           "now exit.");
+    return 0;
+}
+
+fgets(buffer, 1000, file);
+printf("%s", buffer);
+```
+
+### Code Convention
+
+[Các quy tắc về đặt tên theo tiêu chuẩn “Autosar C Coding Guidelines”](https://hala.edu.vn/c-co-ban/cac_quy_tac_ve_dat_ten_theo_tieu_chuan_autosar_c_coding_guidelines/)
+
+</details>
