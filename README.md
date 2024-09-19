@@ -2156,7 +2156,7 @@ JsonValue *parseObject(const char **json_ptr) {
 **Binary search sẽ thực hiện tìm kiếm liên tục bằng cách chia đôi phạm vi tìm kiếm và so sánh giá trị cần tim với giá trị ở giữa phạm vi cho đến khi tìm được vị trí hoặc đến khi không thể thu hẹp được nữa.**
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/744eec4a-a1ac-4515-a2c3-5e6d70bb37d4" width="30%">
+<img src="https://github.com/user-attachments/assets/744eec4a-a1ac-4515-a2c3-5e6d70bb37d4" width="50%">
 </p>
 
 ### Thực hiện binary search
