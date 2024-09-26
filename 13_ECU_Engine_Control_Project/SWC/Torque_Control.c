@@ -2,7 +2,10 @@
 #include "Torque_Control.h"
 #include <stdio.h>  // Thư viện cho printf
 
-// Hàm khởi tạo hệ thống điều khiển mô-men xoắn
+/**
+ * @brief   Hàm khởi tạo hệ thống điều khiển mô-men xoắn.
+ * @return  void
+ */
 void TorqueControl_Init(void) {
     // Khởi tạo các cảm biến bàn đạp ga, tốc độ và tải trọng
     Std_ReturnType status;
@@ -57,7 +60,12 @@ void TorqueControl_Init(void) {
     printf("Hệ thống Torque Control đã sẵn sàng.\n");
 }
 
-// Hàm cập nhật hệ thống điều khiển mô-men xoắn
+/**
+ * @brief   Hàm cập nhật hệ thống điều khiển mô-men xoắn.
+ * @return  void
+ * 
+ * @details Gọi các API và thực hiện hiển thị giá trị của các thành phần liên quan.
+ */
 void TorqueControl_Update(void) {
     float throttle_input = 0.0f;
     float current_speed = 0.0f;

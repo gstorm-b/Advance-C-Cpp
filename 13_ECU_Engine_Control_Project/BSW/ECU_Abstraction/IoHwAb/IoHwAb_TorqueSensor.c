@@ -6,7 +6,11 @@
 // Giả lập cấu hình của cảm biến mô-men xoắn
 static TorqueSensor_ConfigType TorqueSensor_CurrentConfig;
 
-// Hàm khởi tạo cảm biến mô-men xoắn với cấu hình
+/**
+ * @brief   Hàm khởi tạo cảm biến mô-men xoắn với cấu hình.
+ * @param   ConfigPtr Địa chỉ biến khởi tạo.
+ * @return  Trả về trạng thái khởi tạo.
+ */
 Std_ReturnType IoHwAb_TorqueSensor_Init(const TorqueSensor_ConfigType* ConfigPtr) {
     if (ConfigPtr == NULL) {
         printf("Error: Null configuration pointer passed to IoHwAb_TorqueSensor_Init.\n");
@@ -30,7 +34,11 @@ Std_ReturnType IoHwAb_TorqueSensor_Init(const TorqueSensor_ConfigType* ConfigPtr
     return E_OK;
 }
 
-// Hàm đọc giá trị từ cảm biến mô-men xoắn
+/**
+ * @brief   Hàm đọc giá trị từ cảm biến mô-men xoắn.
+ * @param   TorqueValue Địa chỉ biến lưu giá trị cảm biến đọc được.
+ * @return  Trả về trạng thái đọc cảm biến.
+ */
 Std_ReturnType IoHwAb_TorqueSensor_Read(float* TorqueValue) {
     if (TorqueValue == NULL) {
         return E_NOT_OK;  // Kiểm tra con trỏ NULL

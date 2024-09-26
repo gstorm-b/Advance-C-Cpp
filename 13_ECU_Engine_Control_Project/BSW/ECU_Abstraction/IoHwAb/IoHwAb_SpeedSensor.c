@@ -6,7 +6,11 @@
 // Giả lập cấu hình của cảm biến tốc độ
 static SpeedSensor_ConfigType SpeedSensor_CurrentConfig;
 
-// Hàm khởi tạo cảm biến tốc độ với cấu hình
+/**
+ * @brief   Hàm khởi tạo cảm biến tốc độ với cấu hình.
+ * @param   ConfigPtr Địa chỉ biến khởi tạo.
+ * @return  Trả về trạng thái khởi tạo.
+ */
 Std_ReturnType IoHwAb_SpeedSensor_Init(const SpeedSensor_ConfigType* ConfigPtr) {
     if (ConfigPtr == NULL) {
         printf("Error: Null configuration pointer passed to IoHwAb_SpeedSensor_Init.\n");
@@ -30,7 +34,11 @@ Std_ReturnType IoHwAb_SpeedSensor_Init(const SpeedSensor_ConfigType* ConfigPtr) 
     return E_OK;
 }
 
-// Hàm đọc giá trị từ cảm biến tốc độ
+/**
+ * @brief   Hàm đọc giá trị từ cảm biến tốc độ.
+ * @param   SpeedValue Địa chỉ biến lưu giá trị cảm biến đọc được.
+ * @return  Trả về trạng thái đọc dữ liệu.
+ */
 Std_ReturnType IoHwAb_SpeedSensor_Read(float* SpeedValue) {
     if (SpeedValue == NULL) {
         return E_NOT_OK;  // Kiểm tra con trỏ NULL

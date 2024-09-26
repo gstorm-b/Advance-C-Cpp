@@ -18,7 +18,11 @@
 // Giả lập cấu hình của cảm biến bàn đạp ga
 static ThrottleSensor_ConfigType ThrottleSensor_CurrentConfig;
 
-// Hàm khởi tạo cảm biến bàn đạp ga với cấu hình
+/**
+ * @brief   Hàm khởi tạo cảm biến bàn đạp ga với cấu hình.
+ * @param   ConfigPtr Địa chỉ biến khởi tạo.
+ * @return  Trả về trạng thái khởi tạo.
+ */
 Std_ReturnType IoHwAb_ThrottleSensor_Init(const ThrottleSensor_ConfigType* ConfigPtr) {
     if (ConfigPtr == NULL) {
         printf("Error: Null configuration pointer passed to IoHwAb_ThrottleSensor_Init.\n");
@@ -42,7 +46,11 @@ Std_ReturnType IoHwAb_ThrottleSensor_Init(const ThrottleSensor_ConfigType* Confi
     return E_OK;
 }
 
-// Hàm đọc giá trị bàn đạp ga
+/**
+ * @brief   Hàm đọc giá trị từ cảm biến bàn đạp ga.
+ * @param   ThrottlePosition Địa chỉ biến lưu giá trị cảm biến đọc được.
+ * @return  Trả về trạng thái đọc cảm biến.
+ */
 Std_ReturnType IoHwAb_ThrottleSensor_Read(float* ThrottlePosition) {
     if (ThrottlePosition == NULL) {
         return E_NOT_OK;  // Kiểm tra con trỏ NULL

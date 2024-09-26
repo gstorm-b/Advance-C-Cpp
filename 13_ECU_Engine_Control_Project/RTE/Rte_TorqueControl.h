@@ -1,5 +1,5 @@
 /***************************************************************************
- * @file    Rte_TorqueControl.c
+ * @file    Rte_TorqueControl.h
  * @brief   Khai báo các API để gọi hàm liên quan đến giám sát và điều khiển 
  *          mô-men xoắn.
  * @details File cung cấp các API cho việc giám sát và điều khiển mô-men 

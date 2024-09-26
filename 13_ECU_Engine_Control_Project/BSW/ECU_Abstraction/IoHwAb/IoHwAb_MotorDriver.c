@@ -6,7 +6,11 @@
 // Giả lập cấu hình MotorDriver
 static MotorDriver_ConfigType MotorDriver_CurrentConfig;
 
-// Hàm khởi tạo MotorDriver với cấu hình
+/**
+ * @brief   Hàm khởi tạo MotorDriver với cấu hình.
+ * @param   ConfigPtr Cấu hình MotorDriver.
+ * @return  Trả về trạng thái khởi tạo.
+ */
 Std_ReturnType IoHwAb_MotorDriver_Init(const MotorDriver_ConfigType* ConfigPtr) {
     if (ConfigPtr == NULL) {
         printf("Error: Null configuration pointer passed to IoHwAb_MotorDriver_Init.\n");
@@ -33,7 +37,11 @@ Std_ReturnType IoHwAb_MotorDriver_Init(const MotorDriver_ConfigType* ConfigPtr) 
     return E_OK;
 }
 
-// Hàm điều chỉnh mô-men xoắn mô-tơ
+/**
+ * @brief   Hàm điều chỉnh mô-men xoắn mô-tơ.
+ * @param   TorqueValue Giá trị mô-men điều chỉnh.
+ * @return  Trả về trạng thái điều chỉnh.
+ */
 Std_ReturnType IoHwAb_MotorDriver_SetTorque(float TorqueValue) {
     // Kiểm tra giá trị mô-men xoắn hợp lệ
     if (TorqueValue < 0.0f || TorqueValue > MotorDriver_CurrentConfig.Motor_MaxTorque) {

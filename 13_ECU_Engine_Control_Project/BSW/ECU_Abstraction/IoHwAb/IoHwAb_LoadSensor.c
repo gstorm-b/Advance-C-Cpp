@@ -5,7 +5,11 @@
 // Giả lập cấu hình của cảm biến tải trọng
 static LoadSensor_ConfigType LoadSensor_CurrentConfig;
 
-// Hàm khởi tạo cảm biến tải trọng
+/**
+ * @brief   Khởi tạo cảm biến tải trọng.
+ * @param   ConfigPtr Địa chỉ biến khởi tạo.
+ * @return  Trả về trạng thái khởi tạo.
+ */
 Std_ReturnType IoHwAb_LoadSensor_Init(const LoadSensor_ConfigType* ConfigPtr) {
     if (ConfigPtr == NULL) {
         printf("Error: Null configuration pointer passed to IoHwAb_LoadSensor_Init.\n");
@@ -28,7 +32,11 @@ Std_ReturnType IoHwAb_LoadSensor_Init(const LoadSensor_ConfigType* ConfigPtr) {
     return E_OK;
 }
 
-// Hàm đọc giá trị từ cảm biến tải trọng
+/**
+ * @brief   Hàm đọc giá trị từ cảm biến tải trọng.
+ * @param   LoadValue Địa chỉ biến lưu giá trị cảm biến đọc được.
+ * @return  Trả về trạng thái đọc cảm biến.
+ */
 Std_ReturnType IoHwAb_LoadSensor_Read(float* LoadValue) {
     if (LoadValue == NULL) {
         return E_NOT_OK;  // Kiểm tra con trỏ NULL
